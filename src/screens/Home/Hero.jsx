@@ -1,5 +1,5 @@
 import { useEffect, useRef } from 'react';
-import { Scan, Users, Shield, ArrowRight } from 'lucide-react';
+import { Scan, Users, Shield, ArrowRight, Camera } from 'lucide-react';
 
 const Hero = () => {
   const headingRef = useRef(null);
@@ -73,16 +73,16 @@ const Hero = () => {
   ];
 
   return (
-    <section className="relative min-h-screen flex items-center justify-center overflow-hidden bg-gradient-to-br from-emerald-50 via-teal-50 to-cyan-50">
+    <section className="relative min-h-screen flex items-center justify-center overflow-hidden ">
       {/* Animated background elements */}
-      <div className="absolute inset-0 overflow-hidden pointer-events-none">
+      {/* <div className="absolute inset-0 overflow-hidden pointer-events-none">
         <div ref={floatingElementsRef} className="absolute inset-0">
           <div className="absolute top-20 left-20 w-20 h-20 bg-gradient-to-r from-emerald-200/30 to-teal-200/30 rounded-full blur-xl"></div>
           <div className="absolute top-40 right-32 w-32 h-32 bg-gradient-to-r from-cyan-200/20 to-emerald-200/20 rounded-full blur-2xl"></div>
           <div className="absolute bottom-32 left-1/4 w-24 h-24 bg-gradient-to-r from-teal-200/25 to-cyan-200/25 rounded-full blur-xl"></div>
           <div className="absolute bottom-20 right-20 w-16 h-16 bg-gradient-to-r from-emerald-300/30 to-teal-300/30 rounded-full blur-lg"></div>
         </div>
-      </div>
+      </div> */}
 
       {/* Main content */}
       <div className="relative z-10 container mx-auto px-6 py-12 text-center max-w-6xl">
@@ -117,8 +117,8 @@ const Hero = () => {
               className="group relative bg-gradient-to-r from-emerald-500 to-teal-500 text-white px-8 py-4 rounded-xl font-semibold text-lg shadow-xl hover:shadow-2xl transform hover:-translate-y-1 transition-all duration-300 flex items-center justify-center gap-2"
               onClick={handleLogin}
             >
-              Get Started
-              <ArrowRight className="w-5 h-5 group-hover:translate-x-1 transition-transform" />
+              <Camera className="w-5 h-5 " />
+              start Scaning 
             </button>
             
             {/* <button

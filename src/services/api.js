@@ -108,3 +108,12 @@ export const login = async (credentials) => {
     throw error;
   }
 }
+export const signup = async (credentials) => {
+  try {
+    const response = await api.post('/auth/signup', credentials);
+    return response.data;
+  } catch (error) {
+    console.error('Error in POST /auth/login:', error);
+    throw error;
+  }
+}
