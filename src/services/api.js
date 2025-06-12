@@ -12,16 +12,16 @@ const api = axios.create({
 });
 
 // Add a request interceptor to include the JWT token in the Authorization header
-// api.interceptors.request.use(
-//   (config) => {
-//     const token = localStorage.getItem('token');
-//     if (token) {
-//       config.headers.Authorization = `Bearer ${token}`;
-//     }
-//     return config;
-//   },
-//   (error) => Promise.reject(error)
-// );
+api.interceptors.request.use(
+  (config) => {
+    const token = localStorage.getItem('token');
+    if (token) {
+      config.headers.Authorization = `Bearer ${token}`;
+    }
+    return config;
+  },
+  (error) => Promise.reject(error)
+);
 
 // Handle API errors globally
 api.interceptors.response.use(
@@ -30,8 +30,8 @@ api.interceptors.response.use(
     console.error('API Error:', error);
     if (error.response?.status === 401) {
       // Token expired or invalid, clear local storage and redirect to login
-    //   localStorage.removeItem('token');
-    if (window.location.pathname !== '/login') {
+      localStorage.removeItem('token');
+      if (window.location.pathname !== '/login') {
         window.location.href = '/login';
       }
     }
@@ -65,7 +65,7 @@ export const uploadImageGuest = async (file) => {
   return response.data;
 };
 
-// Fetch User Scans (to be implemented on the backend)
+// Fetch User Scans
 export const getScans = async () => {
   try {
     const response = await api.get('/scans');
@@ -87,7 +87,7 @@ export const deleteScan = async (scanId) => {
   }
 };
 
-// Get User Profile (assumed endpoint: /api/users/profile)
+// Get User Profile
 export const getUserProfile = async () => {
   try {
     const response = await api.get('/users/profile');
@@ -98,7 +98,7 @@ export const getUserProfile = async () => {
   }
 };
 
-// Login (assumed endpoint: /api/auth/login)
+// Login
 export const login = async (credentials) => {
   try {
     const response = await api.post('/auth/login', credentials);
@@ -107,13 +107,15 @@ export const login = async (credentials) => {
     console.error('Error in POST /auth/login:', error);
     throw error;
   }
-}
+};
+
+// Signup
 export const signup = async (credentials) => {
   try {
-    const response = await api.post('/auth/signup', credentials);
+    const response = await api.post('/auth/register', credentials);
     return response.data;
   } catch (error) {
-    console.error('Error in POST /auth/login:', error);
+    console.error('Error in POST /auth/signup:', error);
     throw error;
   }
-}
+};

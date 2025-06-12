@@ -1,5 +1,6 @@
 import { useEffect, useRef } from 'react';
 import { Scan, Users, Shield, ArrowRight, Camera } from 'lucide-react';
+import { useNavigate } from 'react-router-dom';
 
 const Hero = () => {
   const headingRef = useRef(null);
@@ -7,7 +8,7 @@ const Hero = () => {
   const buttonsRef = useRef(null);
   const featuresRef = useRef(null);
   const floatingElementsRef = useRef(null);
-
+ const navigate = useNavigate();
   useEffect(() => {
     // Simple fade-in animations using CSS transitions
     if (headingRef.current) {
@@ -115,7 +116,7 @@ const Hero = () => {
           <div ref={buttonsRef} className="flex flex-col sm:flex-row gap-4 justify-center mb-12">
             <button
               className="group relative bg-gradient-to-r from-emerald-500 to-teal-500 text-white px-8 py-4 rounded-xl font-semibold text-lg shadow-xl hover:shadow-2xl transform hover:-translate-y-1 transition-all duration-300 flex items-center justify-center gap-2"
-              onClick={handleLogin}
+              onClick={() => navigate('/scan')}
             >
               <Camera className="w-5 h-5 " />
               start Scaning 

@@ -28,7 +28,6 @@ const userSlice = createSlice({
       localStorage.setItem('token', action.payload);
     },
     logout: (state) => {
-      state.token = null;
       state.profile = null;
       localStorage.removeItem('token');
     }
@@ -52,4 +51,9 @@ const userSlice = createSlice({
 });
 
 export const { setToken, logout } = userSlice.actions;
+
+// Selectors
+export const selectUserProfile = (state) => state.user.profile;
+
+
 export default userSlice.reducer;
