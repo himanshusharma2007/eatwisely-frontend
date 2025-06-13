@@ -3,7 +3,7 @@ import { useDispatch } from 'react-redux';
 import { Eye, EyeOff, Mail, Lock, ArrowRight } from 'lucide-react';
 import { login, socialLogin } from '../services/api';
 import { fetchUserProfile } from '../redux/slices/userSlice';
-import { useNavigate } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import { auth } from '../firebase/firebaseConfig'; // Import initialized auth
 import { signInWithPopup, GoogleAuthProvider } from 'firebase/auth';
 import { FcGoogle } from "react-icons/fc";
@@ -150,9 +150,11 @@ const LoginPage = () => {
 
       <div className="relative z-10 w-full max-w-md">
         <div className="text-center mb-8">
+          <Link to="/">
           <h1 className="text-4xl font-bold leading-[2] font-pacifico bg-gradient-to-r from-emerald-600 via-teal-600 to-cyan-600 bg-clip-text text-transparent">
             EatWisely
           </h1>
+          </Link>
         </div>
 
         <div className="bg-white/80 backdrop-blur-xl rounded-3xl shadow-2xl p-8 border border-white/50 hover:shadow-3xl transition-all duration-500">

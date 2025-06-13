@@ -18,9 +18,9 @@ api.interceptors.response.use(
   (error) => {
     console.error('API Error:', error);
     if (error.response?.status === 401) {
-      if (window.location.pathname !== '/login') {
-        window.location.href = '/login';
-      }
+      // if (window.location.pathname !== '/login') {
+      //   window.location.href = '/login';
+      // }
     }
     return Promise.reject(error);
   }
@@ -32,7 +32,7 @@ api.interceptors.response.use(
 export const uploadImageAuth = async (file) => {
   const formData = new FormData();
   formData.append('image', file);
-  const response = await api.post('/images/upload/auth', formData, {
+  const response = await api.post('/scan/images/upload/auth', formData, {
     headers: {
       'Content-Type': 'multipart/form-data'
     }
@@ -44,7 +44,7 @@ export const uploadImageAuth = async (file) => {
 export const uploadImageGuest = async (file) => {
   const formData = new FormData();
   formData.append('image', file);
-  const response = await api.post('/images/upload/guest', formData, {
+  const response = await api.post('/scan/images/upload/guest', formData, {
     headers: {
       'Content-Type': 'multipart/form-data'
     }
@@ -85,6 +85,17 @@ export const getUserProfile = async () => {
   }
 };
 
+// Update User Profile 
+export const updateProfile = async (data) => {
+  try {
+    const response = await api.put('/auth/me', data);
+    return response.data;
+  } catch (error) {
+    console.error('Error in PATCH /users/profile:', error);
+    throw error;
+  }
+};
+
 // Login
 export const login = async (credentials) => {
   try {
@@ -99,7 +110,7 @@ export const login = async (credentials) => {
 // Signup
 export const signup = async (credentials) => {
   try {
-    const response = await api.post('/auth/signup', credentials);
+    const response = await api.post('/auth/register', credentials);
     return response.data;
   } catch (error) {
     console.error('Error in POST /auth/signup:', error);
