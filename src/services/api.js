@@ -8,20 +8,9 @@ const api = axios.create({
   baseURL: API_URL,
   headers: {
     'Content-Type': 'application/json'
-  }
-});
-
-// Add a request interceptor to include the JWT token in the Authorization header
-api.interceptors.request.use(
-  (config) => {
-    const token = localStorage.getItem('token');
-    if (token) {
-      config.headers.Authorization = `Bearer ${token}`;
-    }
-    return config;
   },
-  (error) => Promise.reject(error)
-);
+  withCredentials: true // Enable sending cookies with requests
+});
 
 // Handle API errors globally
 api.interceptors.response.use(
@@ -29,8 +18,6 @@ api.interceptors.response.use(
   (error) => {
     console.error('API Error:', error);
     if (error.response?.status === 401) {
-      // Token expired or invalid, clear local storage and redirect to login
-      localStorage.removeItem('token');
       if (window.location.pathname !== '/login') {
         window.location.href = '/login';
       }
@@ -90,7 +77,7 @@ export const deleteScan = async (scanId) => {
 // Get User Profile
 export const getUserProfile = async () => {
   try {
-    const response = await api.get('/users/profile');
+    const response = await api.get('/auth/me');
     return response.data;
   } catch (error) {
     console.error('Error in GET /users/profile:', error);
@@ -112,10 +99,32 @@ export const login = async (credentials) => {
 // Signup
 export const signup = async (credentials) => {
   try {
-    const response = await api.post('/auth/register', credentials);
+    const response = await api.post('/auth/signup', credentials);
     return response.data;
   } catch (error) {
     console.error('Error in POST /auth/signup:', error);
+    throw error;
+  }
+};
+
+// Social Login
+export const socialLogin = async (credentials) => {
+  try {
+    const response = await api.post('/auth/social-login', credentials);
+    return response.data;
+  } catch (error) {
+    console.error('Error in POST /auth/social:', error);
+    throw error;
+  }
+};
+
+// Logout
+export const logout = async () => {
+  try {
+    const response = await api.post('/auth/logout');
+    return response.data;
+  } catch (error) {
+    console.error('Error in POST /auth/logout:', error);
     throw error;
   }
 };

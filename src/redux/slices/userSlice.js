@@ -1,5 +1,5 @@
 import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
-import { getUserProfile } from '../../services/api';
+import { getUserProfile, logout as logoutAPI } from '../../services/api';
 
 // Thunk to fetch user profile
 export const fetchUserProfile = createAsyncThunk(
@@ -7,9 +7,22 @@ export const fetchUserProfile = createAsyncThunk(
   async (_, { rejectWithValue }) => {
     try {
       const response = await getUserProfile();
-      return response;
+      return response.user;
     } catch (error) {
       return rejectWithValue(error.response?.data?.message || 'Failed to fetch user profile');
+    }
+  }
+);
+
+// Thunk to handle logout
+export const logoutUser = createAsyncThunk(
+  'user/logoutUser',
+  async (_, { rejectWithValue }) => {
+    try {
+      await logoutAPI();
+      return;
+    } catch (error) {
+      return rejectWithValue(error.response?.data?.message || 'Failed to logout');
     }
   }
 );
@@ -17,7 +30,7 @@ export const fetchUserProfile = createAsyncThunk(
 const userSlice = createSlice({
   name: 'user',
   initialState: {
-    token: localStorage.getItem('token') || null,
+    token: null,
     profile: null,
     status: 'idle', // 'idle' | 'loading' | 'succeeded' | 'failed'
     error: null
@@ -25,11 +38,12 @@ const userSlice = createSlice({
   reducers: {
     setToken: (state, action) => {
       state.token = action.payload;
-      localStorage.setItem('token', action.payload);
     },
-    logout: (state) => {
+    clearUser: (state) => {
+      state.token = null;
       state.profile = null;
-      localStorage.removeItem('token');
+      state.status = 'idle';
+      state.error = null;
     }
   },
   extraReducers: (builder) => {
@@ -46,14 +60,27 @@ const userSlice = createSlice({
       .addCase(fetchUserProfile.rejected, (state, action) => {
         state.status = 'failed';
         state.error = action.payload;
+      })
+      // Logout
+      .addCase(logoutUser.pending, (state) => {
+        state.status = 'loading';
+        state.error = null;
+      })
+      .addCase(logoutUser.fulfilled, (state) => {
+        state.status = 'idle';
+        state.token = null;
+        state.profile = null;
+      })
+      .addCase(logoutUser.rejected, (state, action) => {
+        state.status = 'failed';
+        state.error = action.payload;
       });
   }
 });
 
-export const { setToken, logout } = userSlice.actions;
+export const { setToken, clearUser } = userSlice.actions;
 
 // Selectors
 export const selectUserProfile = (state) => state.user.profile;
-
 
 export default userSlice.reducer;

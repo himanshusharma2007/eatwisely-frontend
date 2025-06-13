@@ -1,10 +1,12 @@
 import React, { useState, useRef, useEffect } from 'react';
 import { useDispatch } from 'react-redux';
 import { Eye, EyeOff, Mail, Lock, User, Calendar, Heart, ArrowRight } from 'lucide-react';
-import { setToken } from '../redux/slices/userSlice';
-import { signup } from '../services/api';
+import { signup, socialLogin } from '../services/api';
+import { fetchUserProfile } from '../redux/slices/userSlice';
 import { useNavigate } from 'react-router-dom';
-
+import { auth } from '../firebase/firebaseConfig'; // Import initialized auth
+import { signInWithPopup, GoogleAuthProvider } from 'firebase/auth';
+import { FcGoogle } from "react-icons/fc";
 const SignUpPage = () => {
   const [showPassword, setShowPassword] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
@@ -16,8 +18,7 @@ const SignUpPage = () => {
     password: ''
   });
   const [errors, setErrors] = useState({});
-  const navigate = useNavigate()
-  
+  const navigate = useNavigate();
   const dispatch = useDispatch();
   const formRef = useRef(null);
   const headingRef = useRef(null);
@@ -51,7 +52,6 @@ const SignUpPage = () => {
       ...prev,
       [name]: value
     }));
-    // Clear error when user starts typing
     if (errors[name]) {
       setErrors(prev => ({
         ...prev,
@@ -103,7 +103,7 @@ const SignUpPage = () => {
     setIsLoading(true);
     
     try {
-      const response = await signup({
+      await signup({
         name: formData.name,
         age: parseInt(formData.age),
         gender: formData.gender,
@@ -111,12 +111,11 @@ const SignUpPage = () => {
         password: formData.password
       });
       
-      dispatch(setToken(response.token));
+      // Fetch user profile and set in Redux
+      await dispatch(fetchUserProfile()).unwrap();
       
-      // Success message or redirect
-      console.log('Signup successful:', response);
-      // You can add navigation here: navigate('/dashboard') or window.location.href = '/dashboard'
-      
+      // Redirect to scan page
+      navigate('/scan');
     } catch (error) {
       console.error('Signup error:', error);
       setErrors({
@@ -127,32 +126,50 @@ const SignUpPage = () => {
     }
   };
 
+  const handleGoogleSignIn = async () => {
+    setIsLoading(true);
+    try {
+      const provider = new GoogleAuthProvider();
+      const result = await signInWithPopup(auth, provider);
+      const user = result.user;
+
+      await socialLogin({
+        email: user.email,
+        name: user.displayName,
+        socialId: user.uid
+      });
+
+      // Fetch user profile and set in Redux
+      await dispatch(fetchUserProfile()).unwrap();
+      
+      // Redirect to scan page
+      navigate('/scan');
+    } catch (error) {
+      console.error('Google sign-in error:', error);
+      setErrors({
+        submit: error.message || 'Google sign-up failed. Please try again.'
+      });
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
   const handleLoginRedirect = () => {
-    // Navigate to login page
-    console.log('Redirect to login');
-     navigate('/login')
+    navigate('/login');
   };
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-emerald-50 via-teal-50 to-cyan-50 flex items-center justify-center px-4 py-8">
-      {/* Background decorative elements */}
-      <div className="absolute inset-0 overflow-hidden pointer-events-none">
-        <div className="absolute top-20 left-20 w-32 h-32 bg-gradient-to-r from-emerald-200/20 to-teal-200/20 rounded-full blur-3xl animate-pulse"></div>
-        <div className="absolute top-1/3 right-20 w-48 h-48 bg-gradient-to-r from-cyan-200/15 to-emerald-200/15 rounded-full blur-3xl animate-pulse delay-1000"></div>
-        <div className="absolute bottom-20 left-1/4 w-40 h-40 bg-gradient-to-r from-teal-200/20 to-cyan-200/20 rounded-full blur-3xl animate-pulse delay-500"></div>
-      </div>
+     
 
       <div className="relative z-10 w-full max-w-md">
-        {/* Logo */}
         <div className="text-center mb-8">
           <h1 className="text-4xl font-bold leading-[2] font-pacifico bg-gradient-to-r from-emerald-600 via-teal-600 to-cyan-600 bg-clip-text text-transparent">
             EatWisely
           </h1>
         </div>
 
-        {/* Signup Card */}
         <div className="bg-white/80 backdrop-blur-xl rounded-3xl shadow-2xl p-8 border border-white/50 hover:shadow-3xl transition-all duration-500">
-          {/* Header */}
           <div ref={headingRef} className="text-center mb-8">
             <h2 className="text-3xl font-bold text-slate-800 mb-2">
               Join Us!
@@ -162,9 +179,7 @@ const SignUpPage = () => {
             </p>
           </div>
 
-          {/* Form */}
           <div ref={formRef} className="space-y-4">
-            {/* Name */}
             <div>
               <label className="block text-sm font-semibold text-slate-700 mb-2">
                 Full Name
@@ -185,7 +200,6 @@ const SignUpPage = () => {
               {errors.name && <p className="text-red-500 text-sm mt-1 animate-pulse">{errors.name}</p>}
             </div>
 
-            {/* Age */}
             <div>
               <label className="block text-sm font-semibold text-slate-700 mb-2">
                 Age
@@ -206,7 +220,6 @@ const SignUpPage = () => {
               {errors.age && <p className="text-red-500 text-sm mt-1 animate-pulse">{errors.age}</p>}
             </div>
 
-            {/* Gender */}
             <div>
               <label className="block text-sm font-semibold text-slate-700 mb-2">
                 Gender
@@ -230,7 +243,6 @@ const SignUpPage = () => {
               {errors.gender && <p className="text-red-500 text-sm mt-1 animate-pulse">{errors.gender}</p>}
             </div>
 
-            {/* Email */}
             <div>
               <label className="block text-sm font-semibold text-slate-700 mb-2">
                 Email Address
@@ -251,7 +263,6 @@ const SignUpPage = () => {
               {errors.email && <p className="text-red-500 text-sm mt-1 animate-pulse">{errors.email}</p>}
             </div>
 
-            {/* Password */}
             <div>
               <label className="block text-sm font-semibold text-slate-700 mb-2">
                 Password
@@ -263,30 +274,28 @@ const SignUpPage = () => {
                   name="password"
                   value={formData.password}
                   onChange={handleInputChange}
-                  className={`w-full pl-12 bg-white pr-12 py-4 border-2 rounded-xl focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:border-transparent transition-all duration-300 ${
-                    errors.password ? 'border-red-300' : 'border-slate-200 hover:border-emerald-300'
+                  className={`w-full pl-12 bg-white pr-12 py-4 text-zinc-700 border-2 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all duration-300 ${
+                    errors.password ? 'border-red-500' : 'border-grey-300 hover:border-grey-300'
                   }`}
                   placeholder="Enter your password"
                 />
                 <button
                   type="button"
                   onClick={() => setShowPassword(!showPassword)}
-                  className="absolute right-4 top-1/2 transform -translate-y-1/2 text-slate-400 hover:text-emerald-500 transition-colors duration-200"
+                  className="absolute right-4 top-1/2 transform -translate-y-1/2 text-slate-400 hover:text-blue-500 transition-colors duration-300"
                 >
                   {showPassword ? <EyeOff className="w-5 h-5" /> : <Eye className="w-5 h-5" />}
                 </button>
               </div>
-              {errors.password && <p className="text-red-500 text-sm mt-1 animate-pulse">{errors.password}</p>}
+              {errors.password && <p className="text-blue-500 text-sm mt-1 animate-pulse">{errors.password}</p>}
             </div>
-
-            {/* Submit Error */}
+            
             {errors.submit && (
-              <div className="bg-red-50 border border-red-200 rounded-xl p-4">
+              <div className="bg-red-50 border-red border-red-200 rounded-xl p-4">
                 <p className="text-red-600 text-sm">{errors.submit}</p>
               </div>
             )}
-
-            {/* Submit Button */}
+            
             <button
               onClick={handleSubmit}
               disabled={isLoading}
@@ -303,34 +312,47 @@ const SignUpPage = () => {
                 </>
               )}
             </button>
+
+            <div className="divider text-slate-600">OR</div>
+
+            <button
+              onClick={handleGoogleSignIn}
+              disabled={isLoading}
+              className="w-full bg-white border-2 border-slate-200 text-slate-700 py-4 rounded-xl font-semibold text-lg shadow-lg hover:shadow-xl hover:border-emerald-300 transform hover:-translate-y-1 transition-all duration-300 flex items-center justify-center gap-2 ${isLoading ? 'opacity-70 cursor-not-allowed' : ''}"
+            >
+             <FcGoogle />
+              Sign up with Google
+            </button>
+            
           </div>
 
-          {/* Login Link */}
           <div className="text-center mt-8">
             <p className="text-slate-600">
-              Already have an account?{' '}
-              <button
-                onClick={handleLoginRedirect}
-                className="text-blue-600 hover:text-blue-700 font-semibold transition-colors duration-200"
-              >
-                Sign in here
-              </button>
-            </p>
-          </div>
+              Already have an account? {' '}
+                <button
+                  onClick={handleLoginRedirect}
+                  className="text-blue-600 hover:text-blue-700 font-semibold transition-colors duration-300"
+                >
+                  Sign in here
+                </button>
+              </p>
+            </div>
+            
+          
+        
         </div>
-
-        {/* Additional Features */}
+        
         <div className="text-center mt-8 text-slate-500">
           <p className="text-sm">
-            By signing up, you agree to our{' '}
+            By signing up, you agree to our {' '}
             <span className="text-emerald-600 cursor-pointer hover:underline">Terms of Service</span>
             {' '}and{' '}
-            <span className="text-emerald-600 cursor-pointer hover:underline">Privacy Policy</span>
+            <span className="text-emerald-blue-600 cursor-pointer hover:underline">Privacy Policy</span>
           </p>
         </div>
       </div>
     </div>
-  );
+  )
 };
 
 export default SignUpPage;

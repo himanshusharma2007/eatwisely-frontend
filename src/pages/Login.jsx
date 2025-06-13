@@ -1,10 +1,12 @@
 import React, { useState, useRef, useEffect } from 'react';
 import { useDispatch } from 'react-redux';
 import { Eye, EyeOff, Mail, Lock, ArrowRight } from 'lucide-react';
-import { setToken } from '../redux/slices/userSlice';
-import { login } from '../services/api';
+import { login, socialLogin } from '../services/api';
+import { fetchUserProfile } from '../redux/slices/userSlice';
 import { useNavigate } from 'react-router-dom';
-
+import { auth } from '../firebase/firebaseConfig'; // Import initialized auth
+import { signInWithPopup, GoogleAuthProvider } from 'firebase/auth';
+import { FcGoogle } from "react-icons/fc";
 const LoginPage = () => {
   const [showPassword, setShowPassword] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
@@ -13,7 +15,7 @@ const LoginPage = () => {
     password: ''
   });
   const [errors, setErrors] = useState({});
-  const navigate = useNavigate()
+  const navigate = useNavigate();
   const dispatch = useDispatch();
   const formRef = useRef(null);
   const headingRef = useRef(null);
@@ -47,7 +49,6 @@ const LoginPage = () => {
       ...prev,
       [name]: value
     }));
-    // Clear error when user starts typing
     if (errors[name]) {
       setErrors(prev => ({
         ...prev,
@@ -83,17 +84,16 @@ const LoginPage = () => {
     setIsLoading(true);
     
     try {
-      const response = await login({
+      await login({
         email: formData.email,
         password: formData.password
       });
       
-      dispatch(setToken(response.token));
+      // Fetch user profile and set in Redux
+      await dispatch(fetchUserProfile()).unwrap();
       
-      // Success message or redirect
-      console.log('Login successful:', response);
-      // You can add navigation here: navigate('/dashboard') or window.location.href = '/dashboard'
-      
+      // Redirect to scan page
+      navigate('/scan');
     } catch (error) {
       console.error('Login error:', error);
       setErrors({
@@ -104,20 +104,44 @@ const LoginPage = () => {
     }
   };
 
+  const handleGoogleSignIn = async () => {
+    setIsLoading(true);
+    try {
+      const provider = new GoogleAuthProvider();
+      const result = await signInWithPopup(auth, provider);
+      const user = result.user;
+
+      const response = await socialLogin({
+        email: user.email,
+        name: user.displayName,
+        socialId: user.uid
+      });
+
+      // Fetch user profile and set in Redux
+      await dispatch(fetchUserProfile()).unwrap();
+      
+      // Redirect to scan page
+      navigate('/scan');
+    } catch (error) {
+      console.error('Google sign-in error:', error);
+      setErrors({
+        submit: error.message || 'Google sign-in failed. Please try again.'
+      });
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
   const handleForgotPassword = () => {
-    // Implement forgot password functionality
     console.log('Forgot password clicked');
   };
 
   const handleSignupRedirect = () => {
-    // Navigate to signup page
-    console.log('Redirect to signup');
-   navigate('/signup')
+    navigate('/signup');
   };
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-emerald-50 via-teal-50 to-cyan-50 flex items-center justify-center px-4 py-8">
-      {/* Background decorative elements */}
       <div className="absolute inset-0 overflow-hidden pointer-events-none">
         <div className="absolute top-20 left-20 w-32 h-32 bg-gradient-to-r from-emerald-200/20 to-teal-200/20 rounded-full blur-3xl animate-pulse"></div>
         <div className="absolute top-1/3 right-20 w-48 h-48 bg-gradient-to-r from-cyan-200/15 to-emerald-200/15 rounded-full blur-3xl animate-pulse delay-1000"></div>
@@ -125,17 +149,13 @@ const LoginPage = () => {
       </div>
 
       <div className="relative z-10 w-full max-w-md">
-        {/* Logo */}
         <div className="text-center mb-8">
           <h1 className="text-4xl font-bold leading-[2] font-pacifico bg-gradient-to-r from-emerald-600 via-teal-600 to-cyan-600 bg-clip-text text-transparent">
             EatWisely
           </h1>
-        
         </div>
 
-        {/* Login Card */}
         <div className="bg-white/80 backdrop-blur-xl rounded-3xl shadow-2xl p-8 border border-white/50 hover:shadow-3xl transition-all duration-500">
-          {/* Header */}
           <div ref={headingRef} className="text-center mb-8">
             <h2 className="text-3xl font-bold text-slate-800 mb-2">
               Welcome Back!
@@ -145,9 +165,7 @@ const LoginPage = () => {
             </p>
           </div>
 
-          {/* Form */}
           <div ref={formRef} className="space-y-4">
-            {/* Email */}
             <div>
               <label className="block text-sm font-semibold text-slate-700 mb-2">
                 Email Address
@@ -159,7 +177,7 @@ const LoginPage = () => {
                   name="email"
                   value={formData.email}
                   onChange={handleInputChange}
-                  className={`w-full pl-12 bg-white pr-4 py-4  border-2 rounded-xl focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:border-transparent transition-all duration-300  ${
+                  className={`w-full pl-12 bg-white pr-4 py-4 text-zinc-700 border-2 rounded-xl focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:border-transparent transition-all duration-300 ${
                     errors.email ? 'border-red-300' : 'border-slate-200 hover:border-emerald-300'
                   }`}
                   placeholder="Enter your email"
@@ -168,7 +186,6 @@ const LoginPage = () => {
               {errors.email && <p className="text-red-500 text-sm mt-1 animate-pulse">{errors.email}</p>}
             </div>
 
-            {/* Password */}
             <div>
               <label className="block text-sm font-semibold text-slate-700 mb-2">
                 Password
@@ -180,7 +197,7 @@ const LoginPage = () => {
                   name="password"
                   value={formData.password}
                   onChange={handleInputChange}
-                  className={`w-full pl-12 bg-white pr-12 py-4  border-2 rounded-xl focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:border-transparent transition-all duration-300  ${
+                  className={`w-full pl-12 bg-white pr-12 py-4 text-zinc-700 border-2 rounded-xl focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:border-transparent transition-all duration-300 ${
                     errors.password ? 'border-red-300' : 'border-slate-200 hover:border-emerald-300'
                   }`}
                   placeholder="Enter your password"
@@ -196,7 +213,6 @@ const LoginPage = () => {
               {errors.password && <p className="text-red-500 text-sm mt-1 animate-pulse">{errors.password}</p>}
             </div>
 
-            {/* Forgot Password */}
             <div className="text-right">
               <button
                 type="button"
@@ -207,14 +223,12 @@ const LoginPage = () => {
               </button>
             </div>
 
-            {/* Submit Error */}
             {errors.submit && (
               <div className="bg-red-50 border border-red-200 rounded-xl p-4">
                 <p className="text-red-600 text-sm">{errors.submit}</p>
               </div>
             )}
 
-            {/* Submit Button */}
             <button
               onClick={handleSubmit}
               disabled={isLoading}
@@ -231,9 +245,21 @@ const LoginPage = () => {
                 </>
               )}
             </button>
+
+            <div className="divider text-slate-600">OR</div>
+
+            <button
+              onClick={handleGoogleSignIn}
+              disabled={isLoading}
+              className={`w-full bg-white border-2 border-slate-200 text-slate-700 py-4 rounded-xl font-semibold text-lg shadow-lg hover:shadow-xl hover:border-emerald-300 transform hover:-translate-y-1 transition-all duration-300 flex items-center justify-center gap-2 ${
+                isLoading ? 'opacity-70 cursor-not-allowed' : ''
+              }`}
+            >
+             <FcGoogle />
+              Sign in with Google
+            </button>
           </div>
 
-          {/* Sign Up Link */}
           <div className="text-center mt-8">
             <p className="text-slate-600">
               Don't have an account?{' '}
@@ -247,7 +273,6 @@ const LoginPage = () => {
           </div>
         </div>
 
-        {/* Additional Features */}
         <div className="text-center mt-8 text-slate-500">
           <p className="text-sm">
             By signing in, you agree to our{' '}

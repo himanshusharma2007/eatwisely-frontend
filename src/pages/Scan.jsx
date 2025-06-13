@@ -2,6 +2,7 @@ import React, { useState, useRef, useEffect } from 'react';
 import { Camera, Upload, AlertCircle, Loader, CheckCircle, Send } from 'lucide-react';
 import { uploadImageAuth, uploadImageGuest } from '../services/api';
 
+
 const ScanPage = () => {
   const [image, setImage] = useState(null);
   const [previewUrl, setPreviewUrl] = useState(null);
