@@ -89,7 +89,7 @@ const Steps = () => {
     <section ref={sectionRef} className="relative py-20 bg-gradient-to-b from-white via-emerald-50/30 to-white overflow-hidden max-w-6xl mx-auto">
     
 
-      <div className="relative container mx-auto px-6 max-w-7xl">
+      <div className="relative container mx-auto  max-w-7xl">
         {/* Header Section */}
         <div className="text-center mb-16">
           <div className="inline-flex items-center gap-2 bg-gradient-to-r from-emerald-100 to-teal-100 px-4 py-2 rounded-full mb-6">

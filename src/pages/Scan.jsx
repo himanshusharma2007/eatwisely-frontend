@@ -208,7 +208,7 @@ const ScanPage = () => {
                   
                   {!previewUrl ? (
                     <div 
-                      className={`border-2 border-dashed rounded-2xl p-8 text-center transition-all duration-300 ${
+                      className={`sm:border-2 sm:border-dashed sm:p-8 rounded-2xl  text-center transition-all duration-300 ${
                         dragActive 
                           ? 'border-emerald-400 bg-emerald-50 scale-105' 
                           : 'border-gray-300 hover:border-emerald-300 hover:bg-emerald-50/50'

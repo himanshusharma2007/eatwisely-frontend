@@ -89,9 +89,9 @@ const AboutEatWisly = () => {
   return (
     <section
       ref={sectionRef}
-      className="relative py-20  overflow-hidden -mt-10"
+      className="relative py-20  overflow-hidden "
     >
-      <div className="relative container mx-auto px-6 sm:px-0 max-w-6xl">
+      <div className="relative container mx-auto  max-w-6xl">
         {/* Hero Section with Problem Statement */}
         <div ref={heroRef} className="mb-20">
           <div className="grid lg:grid-cols-2 gap-12 lg:gap-16">
@@ -155,7 +155,7 @@ const AboutEatWisly = () => {
           </div>
           <div className="flex flex-col border-b items-center justify-between mt-20">
          
-            <div className="flex justify-between gap-12 mb-12 text-zinc-900 mx-auto">
+            <div className="flex flex-col sm:flex-row justify-between gap-12 mb-12 text-zinc-900 mx-auto">
               {/* Left Side - The Problem */}
               <div className="space-y-8 w-full sm:w-1/2">
                 <div className="bg-gradient-to-br from-red-500/20 to-orange-500/20 rounded-2xl p-8 border border-red-500/30">
@@ -223,7 +223,7 @@ const AboutEatWisly = () => {
         {/* Stats Section */}
         <div
           ref={statsRef}
-          className="grid grid-cols-2 lg:grid-cols-4 gap-6 mb-20  mx-auto"
+          className="grid grid-cols-1 lg:grid-cols-4 gap-6 mb-20  mx-auto"
         >
           {stats.map((stat, index) => {
             const IconComponent = stat.icon;

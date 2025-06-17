@@ -7,7 +7,6 @@ const Hero = () => {
   const subheadingRef = useRef(null);
   const buttonsRef = useRef(null);
   const featuresRef = useRef(null);
-  const floatingElementsRef = useRef(null);
  const navigate = useNavigate();
   useEffect(() => {
     // Simple fade-in animations using CSS transitions
@@ -52,38 +51,10 @@ const Hero = () => {
     }
   }, []);
 
-  const handleLogin = () => {
-    // Add your navigation logic here
-    console.log('Navigate to login');
-  };
-
-  const handleSignup = () => {
-    // Add your navigation logic here
-    console.log('Navigate to signup');
-  };
-
-  const handleGuestTry = () => {
-    // Add your navigation logic here
-    console.log('Navigate to scan');
-  };
-
-  const features = [
-    { icon: Scan, text: 'Instant Label Scanning' },
-    { icon: Users, text: 'Family-Safe Choices' },
-    { icon: Shield, text: 'Health Insights' }
-  ];
 
   return (
-    <section className="relative min-h-screen flex items-center justify-center overflow-hidden ">
-      {/* Animated background elements */}
-      {/* <div className="absolute inset-0 overflow-hidden pointer-events-none">
-        <div ref={floatingElementsRef} className="absolute inset-0">
-          <div className="absolute top-20 left-20 w-20 h-20 bg-gradient-to-r from-emerald-200/30 to-teal-200/30 rounded-full blur-xl"></div>
-          <div className="absolute top-40 right-32 w-32 h-32 bg-gradient-to-r from-cyan-200/20 to-emerald-200/20 rounded-full blur-2xl"></div>
-          <div className="absolute bottom-32 left-1/4 w-24 h-24 bg-gradient-to-r from-teal-200/25 to-cyan-200/25 rounded-full blur-xl"></div>
-          <div className="absolute bottom-20 right-20 w-16 h-16 bg-gradient-to-r from-emerald-300/30 to-teal-300/30 rounded-full blur-lg"></div>
-        </div>
-      </div> */}
+    <section className="relative min-h-[calc(100vh-64px)] flex items-center justify-center overflow-hidden ">
+   
 
       {/* Main content */}
       <div className="relative z-10 container mx-auto px-6 py-12 text-center max-w-6xl">
@@ -106,7 +77,7 @@ const Hero = () => {
           
           <p 
             ref={subheadingRef} 
-            className="text-lg sm:text-xl md:text-2xl text-slate-600 mb-8 max-w-3xl mx-auto leading-relaxed"
+            className="text-base sm:text-xl md:text-2xl text-slate-600 mb-8 max-w-3xl mx-auto leading-relaxed"
           >
             Upload a food label and get instant health insights to make smarter, 
             healthier choices for you and your family. Your journey to better nutrition starts here.
@@ -122,48 +93,14 @@ const Hero = () => {
               start Scaning 
             </button>
             
-            {/* <button
-              className="bg-white/80 backdrop-blur-sm text-emerald-600 border-2 border-emerald-200 px-8 py-4 rounded-xl font-semibold text-lg shadow-lg hover:shadow-xl hover:bg-white/90 hover:border-emerald-300 transform hover:-translate-y-1 transition-all duration-300"
-              onClick={handleSignup}
-            >
-              Create Account
-            </button>
-            
-            <button
-              className="text-slate-600 hover:text-emerald-600 px-8 py-4 rounded-xl font-medium text-lg hover:bg-white/50 transition-all duration-300 backdrop-blur-sm"
-              onClick={handleGuestTry}
-            >
-              Try as Guest
-            </button> */}
+           
           </div>
 
-          {/* Feature highlights */}
-          {/* <div ref={featuresRef} className="grid grid-cols-1 sm:grid-cols-3 gap-6 max-w-3xl mx-auto">
-            {features.map((feature, index) => (
-              <div 
-                key={index}
-                className="flex flex-col items-center p-6 bg-white/60 backdrop-blur-sm rounded-2xl shadow-lg hover:shadow-xl transform hover:-translate-y-2 transition-all duration-300 border border-white/40"
-              >
-                <div className="w-12 h-12 bg-gradient-to-r from-emerald-100 to-teal-100 rounded-xl flex items-center justify-center mb-3">
-                  <feature.icon className="w-6 h-6 text-emerald-600" />
-                </div>
-                <span className="text-slate-700 font-medium">{feature.text}</span>
-              </div>
-            ))}
-          </div> */}
+        
         </div>
       </div>
 
-      {/* Decorative bottom wave */}
-      <div className="absolute bottom-0 left-0 right-0">
-        <svg 
-          viewBox="0 0 1200 120" 
-          preserveAspectRatio="none" 
-          className="w-full h-20 fill-white"
-        >
-          <path d="M0,120 C120,100 240,80 360,85 C480,90 600,120 720,110 C840,100 960,60 1080,65 C1140,67.5 1170,82.5 1200,120 L1200,120 L0,120 Z"></path>
-        </svg>
-      </div>
+     
     </section>
   );
 };
