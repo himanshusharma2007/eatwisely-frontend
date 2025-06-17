@@ -87,8 +87,16 @@ export const getUserProfile = async () => {
 
 // Update User Profile 
 export const updateProfile = async (data) => {
+  for (let [key, value] of data.entries()) {
+    console.log(`updateProfile ${key}:`, value);
+  }
+
   try {
-    const response = await api.put('/auth/me', data);
+    const response = await api.put('/auth/me', data, {
+      headers: {
+        'Content-Type': 'multipart/form-data'
+      },
+    });
     return response.data;
   } catch (error) {
     console.error('Error in PATCH /users/profile:', error);
@@ -114,6 +122,15 @@ export const signup = async (credentials) => {
     return response.data;
   } catch (error) {
     console.error('Error in POST /auth/signup:', error);
+    throw error;
+  }
+};
+export const sendFeedback = async (credentials) => {
+  try {
+    const response = await api.post('/feedback', credentials);
+    return response.data;
+  } catch (error) {
+    console.error('Error in POST sendFeedback:', error);
     throw error;
   }
 };

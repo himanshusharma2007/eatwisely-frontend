@@ -9,11 +9,11 @@ import FAQSection from "../screens/Home/FAQs";
 
 const HomePage = () => {
   return (
-    <div className="bg-[#F6FFFA]">
+    <div className="bg-[#F6FFFA] flex flex-col space-y-0">
       <Hero />
       <AboutEatWisly />
       <Features />
-      <HowItWorks />
+      <Steps />  
       <FAQSection />
       <FeedbackForm />
       {/* <Steps />

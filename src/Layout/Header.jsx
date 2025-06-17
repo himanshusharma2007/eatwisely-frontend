@@ -93,7 +93,7 @@ const Header = () => {
               {/* Hover Trigger Area */}
               <div className="flex items-center space-x-3 cursor-pointer py-2">
                 <span className="text-lg font-medium text-slate-800">
-                  Hey, {user.name}
+                  Hey, {user.name.split(' ')[0]}
                 </span>
                 <div 
                   className="w-8 h-8 bg-emerald-500 text-white rounded-full flex items-center justify-center font-bold text-sm hover:bg-emerald-600 transition-colors duration-150"

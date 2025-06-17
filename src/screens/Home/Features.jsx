@@ -1,5 +1,5 @@
 import { useEffect, useRef } from "react";
-import { Heart, Shield, Users, Target, Lightbulb, Award } from "lucide-react";
+import { Heart, Shield, Users, Target, Lightbulb, Award, Scan, Brain, AlertTriangle, CheckCircle } from "lucide-react";
 
 const Features = () => {
   const sectionRef = useRef(null);
@@ -52,97 +52,93 @@ const Features = () => {
 
   const features = [
     {
-      icon: Shield,
-      title: "Ingredient Analysis",
-      description:
-        "Advanced AI scans and identifies harmful ingredients, additives, and allergens in real-time.",
+      icon: Scan,
+      title: "Smart Label Scanning",
+      description: "Advanced OCR technology instantly extracts and analyzes every ingredient from food labels with 98% accuracy.",
+      color: "from-emerald-500 to-teal-500"
     },
     {
-      icon: Heart,
-      title: "Health Insights",
-      description:
-        "Get personalized nutritional advice based on your dietary preferences and health goals.",
+      icon: Brain,
+      title: "AI-Powered Analysis",
+      description: "Our intelligent system identifies harmful additives, allergens, and nutritional concerns in seconds.",
+      color: "from-teal-500 to-cyan-500"
     },
     {
-      icon: Users,
-      title: "Family Safety",
-      description:
-        "Protect your loved ones with family-specific dietary recommendations and allergen alerts.",
+      icon: AlertTriangle,
+      title: "Health Risk Alerts",
+      description: "Get instant warnings about ingredients that may impact your health, allergies, or dietary restrictions.",
+      color: "from-emerald-500 to-green-500"
     },
     {
       icon: Target,
-      title: "Smart Alternatives",
-      description:
-        "Discover healthier product alternatives that match your taste preferences and budget.",
+      title: "Personalized Recommendations",
+      description: "Receive tailored advice based on your health goals, dietary preferences, and lifestyle needs.",
+      color: "from-cyan-500 to-blue-500"
     },
     {
-      icon: Lightbulb,
-      title: "Educational Content",
-      description:
-        "Learn about nutrition with easy-to-understand explanations and dietary tips.",
+      icon: CheckCircle,
+      title: "Healthier Alternatives",
+      description: "Discover better product options that match your taste preferences and nutritional requirements.",
+      color: "from-teal-500 to-emerald-500"
     },
     {
-      icon: Award,
-      title: "Trusted Results",
-      description:
-        "Backed by nutritional science and constantly updated with the latest health research.",
-    },
+      icon: Users,
+      title: "Family Protection",
+      description: "Keep your loved ones safe with family-specific dietary recommendations and allergen monitoring.",
+      color: "from-green-500 to-teal-500"
+    }
   ];
 
   return (
-    <section className="relative py-12 bg-gradient-to-b from-white via-emerald-50/30 to-white overflow-hidden">
-      <h2 className="animate-item text-4xl sm:text-5xl  font-bold mb-20 leading-tight text-center">
-        <span className="bg-gradient-to-r from-emerald-600 via-teal-600 to-cyan-600 bg-clip-text text-transparent">
-          Why Choose EatWisely
-        </span>
-        <br />
-      </h2>
+    <section className="relative py-12 overflow-hidden max-w-6xl mx-auto">
+       {/* Features Section */}
+       <div className="mb-16">
+          <div className="text-center mb-16">
+            <h3 className="text-4xl sm:text-5xl font-bold text-slate-800 mb-6">
+              Why Choose <span className="bg-gradient-to-r from-emerald-600 to-teal-600 bg-clip-text text-transparent">EatWisly</span> 
+            </h3>
+            <p className="text-xl text-slate-600 max-w-3xl mx-auto">
+              Our advanced AI technology makes food label analysis simple, fast, and accurate
+            </p>
+          </div>
 
-      <div
-        ref={sectionRef}
-        className="relative container mx-auto px-6 max-w-7xl"
-      >
-        {/* Features Grid */}
-        <div
-          ref={cardsRef}
-          className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8"
-        >
-          {features.map((feature, index) => (
-            <div
-              key={index}
-              className="group p-8 bg-white/70 backdrop-blur-sm rounded-3xl shadow-lg hover:shadow-2xl border border-white/50 hover:border-emerald-200/50 transition-all duration-500 hover:-translate-y-2"
-            >
-              <div className="w-16 h-16 bg-gradient-to-br from-emerald-100 to-teal-100 rounded-2xl flex items-center justify-center mb-6 group-hover:scale-110 transition-transform duration-300">
-                <feature.icon className="w-8 h-8 text-emerald-600" />
-              </div>
-
-              <h3 className="text-xl font-bold text-slate-800 mb-4 group-hover:text-emerald-600 transition-colors duration-300">
-                {feature.title}
-              </h3>
-
-              <p className="text-slate-600 leading-relaxed">
-                {feature.description}
-              </p>
-            </div>
-          ))}
+          <div ref={cardsRef} className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
+            {features.map((feature, index) => {
+              const IconComponent = feature.icon;
+              return (
+                <div key={index} className="group relative">
+                  <div className="absolute inset-0 bg-gradient-to-r from-emerald-500/5 to-teal-500/5 rounded-3xl blur-xl group-hover:blur-2xl transition-all duration-500"></div>
+                  <div className="relative bg-white/90 backdrop-blur-sm rounded-3xl p-8 shadow-xl hover:shadow-2xl transition-all duration-500 border border-emerald-100/50 group-hover:border-emerald-200/70 h-full">
+                    <div className={`inline-flex items-center justify-center w-16 h-16 bg-gradient-to-r ${feature.color} rounded-2xl mb-6 shadow-lg group-hover:scale-110 transition-transform duration-300`}>
+                      <IconComponent className="w-8 h-8 text-white" />
+                    </div>
+                    <h4 className="text-xl sm:text-2xl font-bold text-slate-800 mb-4 group-hover:text-emerald-600 transition-colors duration-300">
+                      {feature.title}
+                    </h4>
+                    <p className="text-slate-600 leading-relaxed text-base sm:text-lg">
+                      {feature.description}
+                    </p>
+                  </div>
+                </div>
+              );
+            })}
+          </div>
         </div>
 
         {/* Call to Action */}
-        <div className="text-center mt-20">
-          <div className="animate-item bg-gradient-to-r from-emerald-500/10 to-teal-500/10 backdrop-blur-sm rounded-3xl p-8 sm:p-12 border border-emerald-200/30">
-            <h3 className="text-2xl sm:text-3xl font-bold text-slate-800 mb-4">
-              Ready to start your healthy journey?
+        <div className="text-center">
+          <div className="bg-gradient-to-r from-emerald-600 via-teal-600 to-cyan-600 rounded-3xl p-12 shadow-2xl">
+            <h3 className="text-3xl sm:text-4xl font-bold text-white mb-6">
+              Ready to Eat Wisely?
             </h3>
-            <p className="text-lg text-slate-600 mb-8 max-w-2xl mx-auto">
-              Join thousands of users who are already making smarter food
-              choices with EatWisely.
+            <p className="text-emerald-50 text-xl mb-8 max-w-2xl mx-auto">
+              Join thousands of users who are already making smarter food choices with EatWisly's AI-powered analysis.
             </p>
-            <button className="bg-gradient-to-r from-emerald-500 to-teal-500 text-white px-8 py-4 rounded-xl font-semibold text-lg shadow-xl hover:shadow-2xl transform hover:-translate-y-1 transition-all duration-300">
-              Get Started Today
+            <button className="bg-white text-emerald-600 px-8 py-4 rounded-2xl font-bold text-lg hover:bg-emerald-50 transition-all duration-300 shadow-lg hover:shadow-xl transform hover:scale-105">
+              Try EatWisly Now
             </button>
           </div>
         </div>
-      </div>
     </section>
   );
 };

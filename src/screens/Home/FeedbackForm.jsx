@@ -137,7 +137,7 @@ const FeedbackForm = () => {
                   name="name"
                   value={formData.name}
                   onChange={handleInputChange}
-                  className={`w-full pl-12 bg-white pr-4 py-4 border-2 rounded-xl focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:border-transparent transition-all duration-300 ${
+                  className={`w-full pl-12 bg-white pr-4 py-4 border-2  text-gray-800 rounded-xl focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:border-transparent transition-all duration-300 ${
                     errors.name ? 'border-red-300' : 'border-slate-200 hover:border-emerald-300'
                   }`}
                   placeholder="Enter your name"
@@ -158,7 +158,7 @@ const FeedbackForm = () => {
                   name="email"
                   value={formData.email}
                   onChange={handleInputChange}
-                  className={`w-full pl-12 bg-white pr-4 py-4 border-2 rounded-xl focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:border-transparent transition-all duration-300 ${
+                  className={`w-full pl-12 bg-white pr-4 py-4 border-2  text-gray-800 rounded-xl focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:border-transparent transition-all duration-300 ${
                     errors.email ? 'border-red-300' : 'border-slate-200 hover:border-emerald-300'
                   }`}
                   placeholder="Enter your email"
@@ -178,7 +178,7 @@ const FeedbackForm = () => {
                   name="feedbackType"
                   value={formData.feedbackType}
                   onChange={handleInputChange}
-                  className={`w-full pl-12 bg-white pr-4 py-4 border-2 rounded-xl focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:border-transparent transition-all duration-300 appearance-none ${
+                  className={`w-full pl-12 bg-white pr-4 py-4 border-2  text-gray-800 rounded-xl focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:border-transparent transition-all duration-300 appearance-none ${
                     errors.feedbackType ? 'border-red-300' : 'border-slate-200 hover:border-emerald-300'
                   }`}
                 >

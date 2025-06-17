@@ -1,5 +1,5 @@
 import React, { useState, useRef, useEffect } from 'react';
-import { Camera, Upload, AlertCircle, Loader, CheckCircle, Send, X } from 'lucide-react';
+import { Camera, Upload, AlertCircle, Loader, CheckCircle, Send, X, ChevronDown, ChevronUp, Info, Zap, Shield, Heart } from 'lucide-react';
 import { uploadImageAuth, uploadImageGuest } from '../services/api';
 import { useSelector } from 'react-redux';
 import { selectUserProfile } from '../redux/slices/userSlice';
@@ -10,35 +10,67 @@ const ScanPage = () => {
   const [isLoading, setIsLoading] = useState(false);
   const [result, setResult] = useState(null);
   const [error, setError] = useState('');
+  const [showExtractedText, setShowExtractedText] = useState(false);
+  const [dragActive, setDragActive] = useState(false);
   const user = useSelector(selectUserProfile);
   const fileInputRef = useRef(null);
   const headingRef = useRef(null);
   const formRef = useRef(null);
   const resultRef = useRef(null);
 
-  // Check authentication status
+  // Enhanced animations on mount
   useEffect(() => {
-    // Animation on mount
-    if (headingRef.current) {
-      headingRef.current.style.opacity = '0';
-      headingRef.current.style.transform = 'translateY(30px)';
-      setTimeout(() => {
-        headingRef.current.style.transition = 'all 0.8s ease-out';
-        headingRef.current.style.opacity = '1';
-        headingRef.current.style.transform = 'translateY(0)';
-      }, 100);
-    }
+    const animateElements = () => {
+      if (headingRef.current) {
+        headingRef.current.style.opacity = '0';
+        headingRef.current.style.transform = 'translateY(30px)';
+        setTimeout(() => {
+          headingRef.current.style.transition = 'all 0.8s cubic-bezier(0.4, 0, 0.2, 1)';
+          headingRef.current.style.opacity = '1';
+          headingRef.current.style.transform = 'translateY(0)';
+        }, 100);
+      }
 
-    if (formRef.current) {
-      formRef.current.style.opacity = '0';
-      formRef.current.style.transform = 'translateY(20px)';
-      setTimeout(() => {
-        formRef.current.style.transition = 'all 0.6s ease-out';
-        formRef.current.style.opacity = '1';
-        formRef.current.style.transform = 'translateY(0)';
-      }, 200);
-    }
+      if (formRef.current) {
+        formRef.current.style.opacity = '0';
+        formRef.current.style.transform = 'translateY(20px)';
+        setTimeout(() => {
+          formRef.current.style.transition = 'all 0.6s cubic-bezier(0.4, 0, 0.2, 1)';
+          formRef.current.style.opacity = '1';
+          formRef.current.style.transform = 'translateY(0)';
+        }, 300);
+      }
+    };
+
+    animateElements();
   }, []);
+
+  // Drag and drop handlers
+  const handleDrag = (e) => {
+    e.preventDefault();
+    e.stopPropagation();
+    if (e.type === "dragenter" || e.type === "dragover") {
+      setDragActive(true);
+    } else if (e.type === "dragleave") {
+      setDragActive(false);
+    }
+  };
+
+  const handleDrop = (e) => {
+    e.preventDefault();
+    e.stopPropagation();
+    setDragActive(false);
+    
+    if (e.dataTransfer.files && e.dataTransfer.files[0]) {
+      const file = e.dataTransfer.files[0];
+      if (file.type.startsWith('image/')) {
+        setImage(file);
+        setPreviewUrl(URL.createObjectURL(file));
+        setError('');
+        setResult(null);
+      }
+    }
+  };
 
   const handleImageChange = (e) => {
     const file = e.target.files[0];
@@ -65,6 +97,9 @@ const ScanPage = () => {
     setPreviewUrl(null);
     setError('');
     setResult(null);
+    if (previewUrl) {
+      URL.revokeObjectURL(previewUrl);
+    }
   };
 
   const handleSubmit = async () => {
@@ -82,15 +117,15 @@ const ScanPage = () => {
       const response = await uploadFunction(image);
       setResult(response);
 
-      // Animate result display
+      // Enhanced result animation
       if (resultRef.current) {
         resultRef.current.style.opacity = '0';
-        resultRef.current.style.transform = 'translateY(20px)';
+        resultRef.current.style.transform = 'translateX(30px) scale(0.95)';
         setTimeout(() => {
-          resultRef.current.style.transition = 'all 0.6s ease-out';
+          resultRef.current.style.transition = 'all 0.8s cubic-bezier(0.34, 1.56, 0.64, 1)';
           resultRef.current.style.opacity = '1';
-          resultRef.current.style.transform = 'translateY(0)';
-        }, 100);
+          resultRef.current.style.transform = 'translateX(0) scale(1)';
+        }, 150);
       }
     } catch (error) {
       setError(error.response?.data?.message || 'Failed to process image. Please try again.');
@@ -101,224 +136,364 @@ const ScanPage = () => {
 
   // Helper function to get health score color and label
   const getHealthScoreInfo = (score) => {
-    if (score >= 80) return { color: 'bg-green-500', label: 'Excellent', textColor: 'text-green-600' };
-    if (score >= 60) return { color: 'bg-yellow-500', label: 'Good', textColor: 'text-yellow-600' };
-    if (score >= 40) return { color: 'bg-orange-500', label: 'Fair', textColor: 'text-orange-600' };
-    return { color: 'bg-red-500', label: 'Poor', textColor: 'text-red-600' };
+    if (score >= 80) return { 
+      color: 'bg-gradient-to-r from-green-400 to-emerald-500', 
+      label: 'Excellent', 
+      textColor: 'text-green-600',
+      bgColor: 'bg-gradient-to-br from-green-50 to-emerald-50',
+      borderColor: 'border-green-200'
+    };
+    if (score >= 60) return { 
+      color: 'bg-gradient-to-r from-yellow-400 to-amber-500', 
+      label: 'Good', 
+      textColor: 'text-yellow-600',
+      bgColor: 'bg-gradient-to-br from-yellow-50 to-amber-50',
+      borderColor: 'border-yellow-200'
+    };
+    if (score >= 40) return { 
+      color: 'bg-gradient-to-r from-orange-400 to-red-400', 
+      label: 'Fair', 
+      textColor: 'text-orange-600',
+      bgColor: 'bg-gradient-to-br from-orange-50 to-red-50',
+      borderColor: 'border-orange-200'
+    };
+    return { 
+      color: 'bg-gradient-to-r from-red-400 to-red-600', 
+      label: 'Poor', 
+      textColor: 'text-red-600',
+      bgColor: 'bg-gradient-to-br from-red-50 to-red-100',
+      borderColor: 'border-red-200'
+    };
   };
 
   return (
-    <section className="relative min-h-[calc(100vh-94px)] py-4 sm:py-16 px-4 sm:px-6 lg:px-8 flex items-center justify-center">
-      <div className="relative z-10 w-full max-w-6xl flex flex-col lg:flex-row lg:space-x-10 space-y-6 lg:space-y-0  ">
-        
-        {/* Scan Card */}
-        <div className="w-full lg:w-[40%] bg-white/80 backdrop-blur-xl rounded-2xl sm:rounded-3xl shadow-2xl p-4 sm:p-6 lg:p-8 border border-white/50 hover:shadow-3xl transition-all duration-500 mx-auto sm:h-fit ">
-          {/* Header */}
-          <div ref={headingRef} className="text-center mb-6 sm:mb-8">
-            <h2 className="text-xl sm:text-2xl lg:text-3xl font-bold text-slate-800 mb-2">
-              Scan Food Label
-            </h2>
-            <p className="text-sm sm:text-base text-slate-600">
-              Capture or upload a food label to get instant health insights.
-            </p>
-          </div>
-
-          {/* Form */}
-          <div ref={formRef} className="space-y-4 sm:space-y-6">
-            {/* Image Input */}
-            <div className="flex flex-col items-center">
-              <input
-                type="file"
-                accept="image/*"
-                onChange={handleImageChange}
-                ref={fileInputRef}
-                className="hidden"
-              />
-              {!previewUrl && (
-                <div className="flex flex-col sm:flex-row gap-3 sm:gap-4 w-full">
-                  <button
-                    onClick={handleCaptureClick}
-                    className="btn btn-primary flex-1 bg-gradient-to-r from-emerald-500 to-teal-500 text-white border-none hover:shadow-xl transform hover:-translate-y-1 transition-all duration-300 p-3 sm:p-2 text-sm sm:text-base font-medium rounded-xl w-full"
-                  >
-                    <Camera className="w-4 h-4 sm:w-5 sm:h-5 mr-2" />
-                    Capture Image
-                  </button>
-                  <button
-                    onClick={handleUploadClick}
-                    className="btn btn-outline flex-1 border-emerald-200 text-emerald-600 hover:bg-emerald-50 hover:border-emerald-300 transform hover:-translate-y-1 transition-all duration-300 p-3 sm:p-2 text-sm sm:text-base font-medium rounded-xl"
-                  >
-                    <Upload className="w-4 h-4 sm:w-5 sm:h-5 mr-2" />
-                    Upload Image
-                  </button>
-                </div>
-              )}
-            </div>
-
-            {/* Image Preview */}
-            {previewUrl && (
-              <div className="mt-4 relative">
-                <img
-                  src={previewUrl}
-                  alt="Selected food label"
-                  className="w-full h-auto rounded-xl shadow-md max-h-48 sm:max-h-64 object-contain"
-                />
-                <button
-                  onClick={handleDeleteImage}
-                  className="absolute -top-2 -right-2 bg-red-500 hover:bg-red-600 text-white rounded-full p-1.5 shadow-lg transform hover:scale-110 transition-all duration-200"
-                >
-                  <X className="w-4 h-4" />
-                </button>
-              </div>
-            )}
-
-            {/* Error Message */}
-            {error && (
-              <div className="alert alert-error bg-red-50 border border-red-200 rounded-xl p-3 sm:p-4">
-                <AlertCircle className="w-4 h-4 sm:w-5 sm:h-5 text-red-600 mr-2 flex-shrink-0" />
-                <span className="text-red-600 text-xs sm:text-sm">{error}</span>
-              </div>
-            )}
-
-            {/* Submit Button */}
-            <button
-              onClick={handleSubmit}
-              disabled={isLoading || !image}
-              className={`btn btn-primary w-full bg-gradient-to-r from-emerald-500 to-teal-500 text-white border-none hover:shadow-xl transform hover:-translate-y-1 transition-all duration-300 flex items-center justify-center gap-2 p-3 sm:p-4 text-sm sm:text-base font-medium rounded-xl ${
-                isLoading || !image ? 'opacity-70 cursor-not-allowed' : ''
-              }`}
-            >
-              {isLoading ? (
-                <Loader className="w-4 h-4 sm:w-5 sm:h-5 animate-spin" />
-              ) : (
-                <>
-                  Analyze Label
-                  <Send className="w-4 h-4 sm:w-5 sm:h-5" />
-                </>
-              )}
-            </button>
-          </div>
-        </div>
-
-        {/* Results */}
-        {result && (
-          <div ref={resultRef} className="w-full lg:w-[60%] bg-white  rounded-2xl sm:rounded-3xl shadow-2xl p-4 sm:p-6 lg:p-8 border border-white/50 max-h-[80vh] sm:max-h-none overflow-y-auto flex items-center flex-col sm:ml-4">
-            <div className='w-full'>
-
-            <h3 className="text-xl sm:text-2xl font-bold text-slate-800 mb-4 sm:mb-6">Scan Results</h3>
-            </div>
-            
-            <div className="space-y-4 sm:space-y-6">
-              {/* Health Score - Featured at top */}
-              {result.analysis?.healthScore && (
-                <div className="bg-gradient-to-r from-slate-50 to-emerald-50 rounded-2xl p-4 sm:p-6 border border-emerald-100">
-                  <h4 className="text-lg sm:text-xl font-bold text-slate-800 mb-3 sm:mb-4 text-center">
-                    Health Score
-                  </h4>
-                  <div className="flex flex-col items-center space-y-3 sm:space-y-4">
-                    <div className="text-3xl sm:text-4xl lg:text-5xl font-bold text-slate-800">
-                      {result.analysis.healthScore}
-                      <span className="text-lg sm:text-xl text-slate-500">/100</span>
-                    </div>
-                    
-                    {/* Progress Bar */}
-                    <div className="w-full max-w-md">
-                      <div className="flex justify-between text-xs sm:text-sm text-slate-500 mb-2">
-                        <span>Poor</span>
-                        <span>Excellent</span>
-                      </div>
-                      <div className="w-full bg-gray-200 rounded-full h-3 sm:h-4">
-                        <div
-                          className={`${getHealthScoreInfo(result.analysis.healthScore).color} h-3 sm:h-4 rounded-full transition-all duration-1000 ease-out`}
-                          style={{ width: `${result.analysis.healthScore}%` }}
-                        ></div>
-                      </div>
-                      <div className={`text-center mt-2 font-semibold text-sm sm:text-base ${getHealthScoreInfo(result.analysis.healthScore).textColor}`}>
-                        {getHealthScoreInfo(result.analysis.healthScore).label}
-                      </div>
-                    </div>
+    <section className="relative min-h-[calc(100vh-94px)] py-4 sm:py-8 lg:py-16 px-4 sm:px-0">
+      {/* Background gradient */}
+      <div className="absolute inset-0 bg-gradient-to-br from-emerald-50 via-teal-50 to-cyan-50 opacity-60"></div>
+      
+      <div className="relative z-10 w-full max-w-6xl mx-auto ">
+        <div className="flex flex-col xl:flex-row xl:gap-8 gap-6 justify-center">
+          
+          {/* Scan Card - Enhanced */}
+          <div className="w-full xl:w-[40%] xl:max-w-lg mx-auto xl:mx-0">
+            <div className="bg-white/90 backdrop-blur-xl rounded-2xl sm:rounded-3xl shadow-xl border border-white/60 overflow-hidden hover:shadow-2xl transition-all duration-500 hover:scale-[1.02]">
+              
+              {/* Header with gradient */}
+              <div className="bg-gradient-to-r from-emerald-500 to-teal-500 p-6 sm:p-8 text-center">
+                <div ref={headingRef}>
+                  <div className="inline-flex items-center justify-center w-16 h-16 bg-white/20 rounded-full mb-4">
+                    <Zap className="w-8 h-8 text-white" />
                   </div>
-                </div>
-              )}
-
-              {/* Nutritional Info - Compact cards for mobile */}
-              {result.analysis?.nutritionalInfo && (
-                <div>
-                  <h4 className="text-base sm:text-lg font-semibold text-slate-700 mb-3">Nutritional Information</h4>
-                  <div className="grid grid-cols-2 gap-3 sm:gap-4">
-                    <div className="bg-blue-50 rounded-xl p-3 sm:p-4 border border-blue-200">
-                      <div className="text-lg sm:text-xl font-bold text-blue-600">
-                        {result.analysis.nutritionalInfo.totalSugar}g
-                      </div>
-                      <div className="text-xs sm:text-sm text-slate-600">Total Sugar</div>
-                    </div>
-                    <div className="bg-orange-50 rounded-xl p-3 sm:p-4 border border-orange-200">
-                      <div className="text-lg sm:text-xl font-bold text-orange-600">
-                        {result.analysis.nutritionalInfo.totalSodium}mg
-                      </div>
-                      <div className="text-xs sm:text-sm text-slate-600">Total Sodium</div>
-                    </div>
-                  </div>
-                </div>
-              )}
-
-              {/* Harmful Ingredients */}
-              {result.analysis?.harmfulIngredients?.length > 0 && (
-                <div>
-                  <h4 className="text-base sm:text-lg font-semibold text-slate-700 mb-3">⚠️ Harmful Ingredients</h4>
-                  <div className="space-y-2 sm:space-y-3">
-                    {result.analysis.harmfulIngredients.map((ingredient, index) => (
-                      <div key={index} className="bg-red-50 border border-red-200 rounded-xl p-3 sm:p-4">
-                        <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between mb-2">
-                          <span className="font-semibold text-red-700 text-sm sm:text-base">{ingredient.name}</span>
-                          <span className={`text-xs px-2 py-1 rounded-full font-medium mt-1 sm:mt-0 w-fit ${
-                            ingredient.severity === 'High' ? 'bg-red-200 text-red-800' :
-                            ingredient.severity === 'Medium' ? 'bg-yellow-200 text-yellow-800' :
-                            'bg-orange-200 text-orange-800'
-                          }`}>
-                            {ingredient.severity}
-                          </span>
-                        </div>
-                        <p className="text-xs sm:text-sm text-slate-600 mb-2">{ingredient.warning}</p>
-                        {ingredient.alternative && (
-                          <div className="text-xs sm:text-sm">
-                            <span className="font-medium text-green-600">Alternative: </span>
-                            <span className="text-slate-600">{ingredient.alternative}</span>
-                          </div>
-                        )}
-                      </div>
-                    ))}
-                  </div>
-                </div>
-              )}
-
-              {/* Recommendations */}
-              {result.analysis?.recommendations?.length > 0 && (
-                <div>
-                  <h4 className="text-base sm:text-lg font-semibold text-slate-700 mb-3">💡 Recommendations</h4>
-                  <div className="space-y-3 sm:space-y-4">
-                    {result.analysis.recommendations.map((rec, index) => (
-                      <div key={index} className="bg-emerald-50 border border-emerald-200 rounded-xl p-3 sm:p-4">
-                        <h5 className="font-semibold text-emerald-700 text-sm sm:text-base mb-2">{rec.title}</h5>
-                        <p className="text-xs sm:text-sm text-slate-600">{rec.message}</p>
-                      </div>
-                    ))}
-                  </div>
-                </div>
-              )}
-
-              {/* Extracted Text - Collapsible on mobile */}
-              <div>
-                <h4 className="text-base sm:text-lg font-semibold text-slate-700 mb-3">📝 Extracted Text</h4>
-                <div className="bg-slate-50 rounded-xl p-3 sm:p-4 border border-slate-200">
-                  <p className="text-xs sm:text-sm text-slate-600 leading-relaxed max-h-32 sm:max-h-none overflow-y-auto">
-                    {result.extractedText}
+                  <h2 className="text-2xl sm:text-3xl font-bold text-white mb-2">
+                    Scan Food Label
+                  </h2>
+                  <p className="text-emerald-100 text-sm sm:text-base">
+                    Get instant health insights from any food label
                   </p>
                 </div>
               </div>
+
+              {/* Form Content */}
+              <div ref={formRef} className="p-6 sm:p-8 space-y-6">
+                
+                {/* Enhanced Upload Area */}
+                <div className="relative">
+                  <input
+                    type="file"
+                    accept="image/*"
+                    onChange={handleImageChange}
+                    ref={fileInputRef}
+                    className="hidden"
+                  />
+                  
+                  {!previewUrl ? (
+                    <div 
+                      className={`border-2 border-dashed rounded-2xl p-8 text-center transition-all duration-300 ${
+                        dragActive 
+                          ? 'border-emerald-400 bg-emerald-50 scale-105' 
+                          : 'border-gray-300 hover:border-emerald-300 hover:bg-emerald-50/50'
+                      }`}
+                      onDragEnter={handleDrag}
+                      onDragLeave={handleDrag}
+                      onDragOver={handleDrag}
+                      onDrop={handleDrop}
+                    >
+                      <div className="space-y-4">
+                        <div className="inline-flex items-center justify-center w-16 h-16 bg-emerald-100 rounded-full">
+                          <Upload className="w-8 h-8 text-emerald-600" />
+                        </div>
+                        <div>
+                          <p className="text-lg font-semibold text-gray-700 mb-2">
+                            Drop your image here
+                          </p>
+                          <p className="text-sm text-gray-500 mb-4">
+                            or choose an option below
+                          </p>
+                        </div>
+                        
+                        <div className="flex flex-col sm:flex-row gap-3">
+                          <button
+                            onClick={handleCaptureClick}
+                            className="flex-1 bg-gradient-to-r from-emerald-500 to-teal-500 text-white px-6 py-3 rounded-xl font-medium transition-all duration-300 hover:shadow-lg hover:scale-105 transform active:scale-95 "
+                          >
+                            <Camera className="w-5 h-5 mr-2 inline" />
+                            <span className='text-nowrap'>Take Photo</span>
+                          </button>
+                          <button
+                            onClick={handleUploadClick}
+                            className="flex-1 border-2 border-emerald-200 text-emerald-600 px-6 py-3 rounded-xl font-medium transition-all duration-300 hover:bg-emerald-50 hover:border-emerald-300 hover:scale-105 transform active:scale-95"
+                          >
+                            <Upload className="w-5 h-5 mr-2 inline" />
+                            <span className='text-nowrap'> Browse Files</span>
+                          </button>
+                        </div>
+                      </div>
+                    </div>
+                  ) : (
+                    /* Enhanced Image Preview */
+                    <div className="relative group">
+                      <div className="rounded-2xl overflow-hidden shadow-lg">
+                        <img
+                          src={previewUrl}
+                          alt="Selected food label"
+                          className="w-full h-auto max-h-64 object-contain bg-gray-50"
+                        />
+                      </div>
+                      <button
+                        onClick={handleDeleteImage}
+                        className="absolute -top-3 -right-3 bg-red-500 hover:bg-red-600 text-white rounded-full p-2 shadow-lg transform hover:scale-110 transition-all duration-200 "
+                      >
+                        <X className="w-4 h-4" />
+                      </button>
+                      <div className="absolute inset-0 bg-black/0 group-hover:bg-black/10 transition-all duration-200 rounded-2xl"></div>
+                    </div>
+                  )}
+                </div>
+
+                {/* Enhanced Error Message */}
+                {error && (
+                  <div className="bg-red-50 border-l-4 border-red-400 p-4 rounded-lg animate-shake">
+                    <div className="flex items-center">
+                      <AlertCircle className="w-5 h-5 text-red-600 mr-3 flex-shrink-0" />
+                      <span className="text-red-700 text-sm font-medium">{error}</span>
+                    </div>
+                  </div>
+                )}
+
+                {/* Enhanced Submit Button */}
+                <button
+                  onClick={handleSubmit}
+                  disabled={isLoading || !image}
+                  className={`w-full bg-gradient-to-r from-emerald-500 to-teal-500 text-white py-4 px-6 rounded-xl font-semibold text-lg transition-all duration-300 transform ${
+                    isLoading || !image 
+                      ? 'opacity-50 cursor-not-allowed' 
+                      : 'hover:shadow-xl hover:scale-105 active:scale-95 hover:-translate-y-1'
+                  }`}
+                >
+                  {isLoading ? (
+                    <div className="flex items-center justify-center">
+                      <Loader className="w-6 h-6 animate-spin mr-2" />
+                      Analyzing...
+                    </div>
+                  ) : (
+                    <div className="flex items-center justify-center">
+                      <Zap className="w-6 h-6 mr-2" />
+                      Analyze Label
+                    </div>
+                  )}
+                </button>
+
+                
+              </div>
             </div>
           </div>
-        )}
+
+          {/* Enhanced Results */}
+          {result && (
+            <div ref={resultRef} className="w-full xl:w-[60%]">
+              <div className="bg-white/95 backdrop-blur-xl rounded-2xl sm:rounded-3xl shadow-xl border border-white/60 overflow-hidden">
+                
+                {/* Results Header */}
+                
+                <div className="p-6 sm:p-8  overflow-y-auto custom-scrollbar">
+                  <div className="space-y-8">
+                    
+                    {/* Enhanced Health Score */}
+                    {result.analysis?.healthScore && (
+                      <div className={`${getHealthScoreInfo(result.analysis.healthScore).bgColor} ${getHealthScoreInfo(result.analysis.healthScore).borderColor} border-2 rounded-2xl p-6 text-center relative overflow-hidden`}>
+                        <div className="absolute inset-0 bg-gradient-to-br from-white/20 to-transparent"></div>
+                        <div className="relative z-10">
+                          <h4 className="text-xl font-bold text-slate-800 mb-4 flex items-center justify-center">
+                            <Heart className="w-6 h-6 mr-2 text-emerald-600" />
+                            Health Score
+                          </h4>
+                          <div className="mb-6">
+                            <div className="text-5xl sm:text-6xl font-bold text-slate-800 mb-2">
+                              {result.analysis.healthScore}
+                              <span className="text-2xl text-slate-500">/100</span>
+                            </div>
+                            <div className={`inline-block px-4 py-2 rounded-full font-semibold ${getHealthScoreInfo(result.analysis.healthScore).textColor} bg-white/80`}>
+                              {getHealthScoreInfo(result.analysis.healthScore).label}
+                            </div>
+                          </div>
+                          
+                          {/* Enhanced Progress Bar */}
+                          <div className="max-w-md mx-auto">
+                            <div className="flex justify-between text-sm text-slate-600 mb-3">
+                              <span>Poor</span>
+                              <span>Fair</span>
+                              <span>Good</span>
+                              <span>Excellent</span>
+                            </div>
+                            <div className="w-full bg-white/60 rounded-full h-4 shadow-inner">
+                              <div
+                                className={`${getHealthScoreInfo(result.analysis.healthScore).color} h-4 rounded-full transition-all duration-2000 ease-out shadow-lg`}
+                                style={{ width: `${result.analysis.healthScore}%` }}
+                              ></div>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    )}
+
+                    {/* Enhanced Nutritional Info */}
+                    {result.analysis?.nutritionalInfo && (
+                      <div>
+                        <h4 className="text-lg font-bold text-slate-800 mb-4 flex items-center">
+                          <Info className="w-5 h-5 mr-2 text-blue-600" />
+                          Nutritional Breakdown
+                        </h4>
+                        <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                          <div className="bg-gradient-to-br from-blue-50 to-indigo-50 border border-blue-200 rounded-xl p-5 text-center hover:shadow-md transition-all duration-300">
+                            <div className="text-3xl font-bold text-blue-600 mb-2">
+                              {result.analysis.nutritionalInfo.totalSugar}g
+                            </div>
+                            <div className="text-sm font-medium text-slate-600">Total Sugar</div>
+                            <div className="w-full bg-blue-200 rounded-full h-2 mt-3">
+                              <div className="bg-blue-500 h-2 rounded-full" style={{width: `${Math.min(result.analysis.nutritionalInfo.totalSugar / 50 * 100, 100)}%`}}></div>
+                            </div>
+                          </div>
+                          <div className="bg-gradient-to-br from-orange-50 to-red-50 border border-orange-200 rounded-xl p-5 text-center hover:shadow-md transition-all duration-300">
+                            <div className="text-3xl font-bold text-orange-600 mb-2">
+                              {result.analysis.nutritionalInfo.totalSodium}mg
+                            </div>
+                            <div className="text-sm font-medium text-slate-600">Total Sodium</div>
+                            <div className="w-full bg-orange-200 rounded-full h-2 mt-3">
+                              <div className="bg-orange-500 h-2 rounded-full" style={{width: `${Math.min(result.analysis.nutritionalInfo.totalSodium / 2300 * 100, 100)}%`}}></div>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    )}
+
+                    {/* Enhanced Harmful Ingredients */}
+                    {result.analysis?.harmfulIngredients?.length > 0 && (
+                      <div>
+                        <h4 className="text-lg font-bold text-slate-800 mb-4 flex items-center">
+                          <AlertCircle className="w-5 h-5 mr-2 text-red-600" />
+                          Ingredients of Concern
+                        </h4>
+                        <div className="space-y-4">
+                          {result.analysis.harmfulIngredients.map((ingredient, index) => (
+                            <div key={index} className="bg-gradient-to-r from-red-50 to-orange-50 border-l-4 border-red-400 rounded-lg p-4 hover:shadow-md transition-all duration-300">
+                              <div className="flex flex-col sm:flex-row sm:items-start sm:justify-between mb-3">
+                                <h5 className="font-bold text-red-700 text-base">{ingredient.name}</h5>
+                                <span className={`inline-block px-3 py-1 rounded-full text-xs font-semibold mt-2 sm:mt-0 ${
+                                  ingredient.severity === 'High' ? 'bg-red-200 text-red-800' :
+                                  ingredient.severity === 'Medium' ? 'bg-yellow-200 text-yellow-800' :
+                                  'bg-orange-200 text-orange-800'
+                                }`}>
+                                  {ingredient.severity} Risk
+                                </span>
+                              </div>
+                              <p className="text-sm text-slate-700 mb-3 leading-relaxed">{ingredient.warning}</p>
+                              {ingredient.alternative && (
+                                <div className="bg-green-100 border border-green-200 rounded-lg p-3">
+                                  <span className="font-semibold text-green-700 text-sm">💡 Better Alternative: </span>
+                                  <span className="text-green-600 text-sm">{ingredient.alternative}</span>
+                                </div>
+                              )}
+                            </div>
+                          ))}
+                        </div>
+                      </div>
+                    )}
+
+                    {/* Enhanced Recommendations */}
+                    {result.analysis?.recommendations?.length > 0 && (
+                      <div>
+                        <h4 className="text-lg font-bold text-slate-800 mb-4 flex items-center">
+                          <CheckCircle className="w-5 h-5 mr-2 text-emerald-600" />
+                          Health Recommendations
+                        </h4>
+                        <div className="space-y-4">
+                          {result.analysis.recommendations.map((rec, index) => (
+                            <div key={index} className="bg-gradient-to-r from-emerald-50 to-teal-50 border border-emerald-200 rounded-xl p-5 hover:shadow-md transition-all duration-300">
+                              <h5 className="font-bold text-emerald-700 text-base mb-2 flex items-center">
+                                <span className="w-2 h-2 bg-emerald-500 rounded-full mr-2"></span>
+                                {rec.title}
+                              </h5>
+                              <p className="text-sm text-slate-700 leading-relaxed">{rec.message}</p>
+                            </div>
+                          ))}
+                        </div>
+                      </div>
+                    )}
+
+                    {/* Enhanced Extracted Text - Collapsible */}
+                    <div>
+                      <button
+                        onClick={() => setShowExtractedText(!showExtractedText)}
+                        className="w-full flex items-center justify-between text-lg font-bold text-slate-800 mb-4 p-3 bg-slate-50 rounded-xl hover:bg-slate-100 transition-all duration-200"
+                      >
+                        <span className="flex items-center">
+                          <div className="w-5 h-5 mr-2 text-slate-600">📝</div>
+                          Extracted Text
+                        </span>
+                        {showExtractedText ? <ChevronUp className="w-5 h-5" /> : <ChevronDown className="w-5 h-5" />}
+                      </button>
+                      
+                      {showExtractedText && (
+                        <div className="bg-slate-50 border border-slate-200 rounded-xl p-4 max-h-48 overflow-y-auto custom-scrollbar">
+                          <p className="text-sm text-slate-700 leading-relaxed whitespace-pre-wrap">
+                            {result.extractedText}
+                          </p>
+                        </div>
+                      )}
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          )}
+        </div>
       </div>
+
+      {/* Custom styles */}
+      <style jsx>{`
+        .custom-scrollbar::-webkit-scrollbar {
+          width: 6px;
+        }
+        .custom-scrollbar::-webkit-scrollbar-track {
+          background: #f1f5f9;
+          border-radius: 10px;
+        }
+        .custom-scrollbar::-webkit-scrollbar-thumb {
+          background: #cbd5e1;
+          border-radius: 10px;
+        }
+        .custom-scrollbar::-webkit-scrollbar-thumb:hover {
+          background: #94a3b8;
+        }
+        @keyframes shake {
+          0%, 100% { transform: translateX(0); }
+          25% { transform: translateX(-5px); }
+          75% { transform: translateX(5px); }
+        }
+        .animate-shake {
+          animation: shake 0.5s ease-in-out;
+        }
+      `}</style>
     </section>
   );
 };
