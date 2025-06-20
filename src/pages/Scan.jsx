@@ -167,7 +167,7 @@ const ScanPage = () => {
   };
 
   return (
-    <section className="relative min-h-[calc(100vh-94px)] py-4 sm:py-8 lg:py-16 px-4 sm:px-0">
+    <section className="relative  min-h-[calc(100vh-94px)] py-4 sm:py-8 lg:py-16 px-4 sm:px-0">
       {/* Background gradient */}
       <div className="absolute inset-0 bg-gradient-to-br from-emerald-50 via-teal-50 to-cyan-50 opacity-60"></div>
       
@@ -181,9 +181,9 @@ const ScanPage = () => {
               {/* Header with gradient */}
               <div className="bg-gradient-to-r from-emerald-500 to-teal-500 p-6 sm:p-8 text-center">
                 <div ref={headingRef}>
-                  <div className="inline-flex items-center justify-center w-16 h-16 bg-white/20 rounded-full mb-4">
+                  {/* <div className="inline-flex items-center justify-center w-16 h-16 bg-white/20 rounded-full mb-4">
                     <Zap className="w-8 h-8 text-white" />
-                  </div>
+                  </div> */}
                   <h2 className="text-2xl sm:text-3xl font-bold text-white mb-2">
                     Scan Food Label
                   </h2>

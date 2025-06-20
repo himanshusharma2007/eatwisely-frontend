@@ -1,7 +1,7 @@
 import React, { useState, useRef, useEffect } from "react";
 import { useSelector, useDispatch } from "react-redux";
-import { Link, useNavigate } from "react-router-dom";
-import { Menu, User, LogOut, LogIn, UserPlus, X } from "lucide-react";
+import { Link, useNavigate, useLocation } from "react-router-dom";
+import { Menu, User, LogOut, LogIn, UserPlus, X, History, Camera } from "lucide-react";
 import { selectUserProfile, logoutUser } from "../redux/slices/userSlice";
 
 const Header = () => {
@@ -12,19 +12,24 @@ const Header = () => {
   const user = useSelector(selectUserProfile);
   const dispatch = useDispatch();
   const navigate = useNavigate();
-
+  const location = useLocation();
+  const isOnScanRoute = location.pathname.includes("/scan");
   // Handle click outside to close dropdown when it was opened by click
   useEffect(() => {
     const handleClickOutside = (event) => {
-      if (isDropdownClicked && dropdownRef.current && !dropdownRef.current.contains(event.target)) {
+      if (
+        isDropdownClicked &&
+        dropdownRef.current &&
+        !dropdownRef.current.contains(event.target)
+      ) {
         setIsDropdownOpen(false);
         setIsDropdownClicked(false);
       }
     };
 
-    document.addEventListener('mousedown', handleClickOutside);
+    document.addEventListener("mousedown", handleClickOutside);
     return () => {
-      document.removeEventListener('mousedown', handleClickOutside);
+      document.removeEventListener("mousedown", handleClickOutside);
     };
   }, [isDropdownClicked]);
 
@@ -68,7 +73,7 @@ const Header = () => {
     setIsDropdownOpen(false);
     setIsDropdownClicked(false);
   };
-  
+
   return (
     <div className="h-24 flex items-center relative">
       <div className="max-w-6xl mx-auto w-full flex items-center justify-between px-4 sm:px-0 ">
@@ -84,59 +89,89 @@ const Header = () => {
         {/* Desktop Menu */}
         <div className="hidden md:flex items-center gap-4">
           {user ? (
-            <div 
-              ref={dropdownRef}
-              className="relative"
-              onMouseEnter={handleMouseEnter}
-              onMouseLeave={handleMouseLeave}
-            >
-              {/* Hover Trigger Area */}
-              <div className="flex items-center space-x-3 cursor-pointer py-2">
-                <span className="text-lg font-medium text-slate-800">
-                  Hey, {user.name.split(' ')[0]}
-                </span>
-                <div 
-                  className="w-8 h-8 bg-emerald-500 text-white rounded-full flex items-center justify-center font-bold text-sm hover:bg-emerald-600 transition-colors duration-150"
-                  onClick={handleIconClick}
+            <>
+              {isOnScanRoute && (
+                <>
+                <Link
+                  to="/scan"
+                  className="flex items-center gap-3 p-3 rounded-lg text-slate-800 hover:text-gray-700  transition-colors duration-150"
+                  onClick={() => setIsMenuOpen(false)}
                 >
-                  {user.name.charAt(0).toUpperCase()}
+                  <Camera className="w-5 h-5 " />
+                  <span className="font-medium  ">
+                    Scan 
+                  </span>
+                </Link><Link
+                  to="/scan-history"
+                  className="flex items-center gap-3 p-3 rounded-lg text-slate-800 hover:text-gray-700  transition-colors duration-150"
+                  onClick={() => setIsMenuOpen(false)}
+                >
+                  <History className="w-5 h-5 " />
+                  <span className="font-medium  ">
+                    Scan History
+                  </span>
+                </Link>
+                </>
+              )}
+
+              <div
+                ref={dropdownRef}
+                className="relative"
+                onMouseEnter={handleMouseEnter}
+                onMouseLeave={handleMouseLeave}
+              >
+                {/* Hover Trigger Area */}
+                <div className="flex items-center space-x-3 cursor-pointer py-2">
+                  {!isOnScanRoute && (
+                    <span className="text-lg font-medium text-slate-800">
+                      Hey, {user.name.split(" ")[0]}
+                    </span>
+                  )}
+                  <div
+                    className="w-8 h-8 bg-emerald-500 text-white rounded-full flex items-center justify-center font-bold text-sm hover:bg-emerald-600 transition-colors duration-150"
+                    onClick={handleIconClick}
+                  >
+                    {user.name.charAt(0).toUpperCase()}
+                  </div>
+                </div>
+
+                {/* Dropdown Content */}
+                <div
+                  className={`absolute right-0 top-full  w-52 bg-white rounded-lg shadow-lg border border-gray-200 py-2 transition-all duration-200 ease-in-out transform z-50 ${
+                    isDropdownOpen
+                      ? "opacity-100 visible translate-y-0"
+                      : "opacity-0 invisible translate-y-2 pointer-events-none"
+                  }`}
+                >
+                  <Link
+                    to="/profile"
+                    className="flex items-center gap-2 px-4 py-2 text-slate-800 hover:bg-gray-50 transition-colors duration-150"
+                    onClick={handleDropdownItemClick}
+                  >
+                    <User className="w-4 h-4" /> Profile
+                  </Link>
+                  <button
+                    onClick={() => {
+                      handleLogout();
+                      handleDropdownItemClick();
+                    }}
+                    className="w-full flex items-center gap-2 px-4 py-2 text-red-600 hover:bg-red-50 transition-colors duration-150"
+                  >
+                    <LogOut className="w-4 h-4" /> Logout
+                  </button>
                 </div>
               </div>
-              
-              {/* Dropdown Content */}
-              <div className={`absolute right-0 top-full  w-52 bg-white rounded-lg shadow-lg border border-gray-200 py-2 transition-all duration-200 ease-in-out transform z-50 ${
-                isDropdownOpen 
-                  ? 'opacity-100 visible translate-y-0' 
-                  : 'opacity-0 invisible translate-y-2 pointer-events-none'
-              }`}>
-                <Link 
-                  to="/profile" 
-                  className="flex items-center gap-2 px-4 py-2 text-slate-800 hover:bg-gray-50 transition-colors duration-150"
-                  onClick={handleDropdownItemClick}
-                >
-                  <User className="w-4 h-4" /> Profile
-                </Link>
-                <button
-                  onClick={() => {
-                    handleLogout();
-                    handleDropdownItemClick();
-                  }}
-                  className="w-full flex items-center gap-2 px-4 py-2 text-red-600 hover:bg-red-50 transition-colors duration-150"
-                >
-                  <LogOut className="w-4 h-4" /> Logout
-                </button>
-              </div>
-            </div>
-          ) : ( 
+            </>
+          ) : (
             <div className="flex items-center gap-4">
-              <Link 
-                to="/login" 
+              <Link
+                to="/login"
                 className="flex items-center gap-2 px-4 py-2 bg-zinc-900 hover:bg-gray-700 rounded-lg transition-colors duration-150"
               >
                 <LogIn className="w-5 h-5" /> Login
               </Link>
-              <Link 
-                to="/signup" 
+              <Link
+                to="/signup"
                 className="flex items-center gap-2 px-4 py-2 border-2 border-teal-500 text-teal-600 hover:bg-teal-50 rounded-lg transition-colors duration-150"
               >
                 <UserPlus className="w-5 h-5" /> Sign Up
@@ -169,11 +204,11 @@ const Header = () => {
       {isMenuOpen && (
         <>
           {/* Backdrop */}
-          <div 
+          <div
             className="fixed inset-0 bg-black bg-opacity-50 z-40 md:hidden"
             onClick={() => setIsMenuOpen(false)}
           />
-          
+
           {/* Mobile Menu */}
           <div className="fixed top-0 right-0 h-full w-80 max-w-[80vw] bg-white shadow-2xl z-50 md:hidden transform transition-transform duration-300 ease-in-out">
             <div className="flex flex-col h-full">
@@ -187,7 +222,7 @@ const Header = () => {
                   <X className="w-5 h-5 text-zinc-900" />
                 </button>
               </div>
-              
+
               {/* Menu Items */}
               <div className="flex-1 p-4">
                 {user ? (
@@ -198,11 +233,13 @@ const Header = () => {
                         {user.name.charAt(0).toUpperCase()}
                       </div>
                       <div>
-                        <p className="font-medium text-slate-800">Hey, {user.name}</p>
+                        <p className="font-medium text-slate-800">
+                          Hey, {user.name}
+                        </p>
                         <p className="text-sm text-slate-600">Welcome back!</p>
                       </div>
                     </div>
-                    
+
                     {/* Menu Links */}
                     <div className="space-y-2">
                       <Link
@@ -211,8 +248,26 @@ const Header = () => {
                         onClick={() => setIsMenuOpen(false)}
                       >
                         <User className="w-5 h-5 text-slate-600" />
-                        <span className="font-medium text-slate-800">Profile</span>
+                        <span className="font-medium text-slate-800">
+                          Profile
+                        </span>
                       </Link>
+
+                      {/* New Scan History Link - Only show if on /scan route */}
+                      {console.log("isOnScanRoute", isOnScanRoute)}
+                      {isOnScanRoute && (
+                        <Link
+                          to="/scan-history"
+                          className="flex items-center gap-3 p-3 rounded-lg hover:bg-gray-50 transition-colors duration-150"
+                          onClick={() => setIsMenuOpen(false)}
+                        >
+                          <History className="w-5 h-5 text-slate-600" />
+                          <span className="font-medium text-slate-800">
+                            Scan History
+                          </span>
+                        </Link>
+                      )}
+
                       <button
                         onClick={() => {
                           handleLogout();
@@ -243,10 +298,7 @@ const Header = () => {
                       <UserPlus className="w-5 h-5" />
                       <span className="font-medium">Sign Up</span>
                     </Link>
-                    <Link 
-                      to="/scan"
-                      onClick={() => setIsMenuOpen(false)}
-                    >
+                    <Link to="/scan" onClick={() => setIsMenuOpen(false)}>
                       <button className="w-full bg-gradient-to-r from-emerald-500 to-teal-500 text-white p-3 rounded-lg font-semibold shadow-lg hover:shadow-xl transform hover:-translate-y-0.5 transition-all duration-300">
                         Try Now
                       </button>

@@ -9,6 +9,8 @@ import ScanPage from "./pages/Scan";
 import ProfilePage from "./pages/ProfilePage";
 import { fetchUserProfile } from "./redux/slices/userSlice";
 import { useDispatch } from "react-redux";
+import ScanHistory from "./pages/ScanHistory";
+import ScanDetailsPage from "./pages/ScanDetail";
 const App = () => {
   const dispatch = useDispatch();
   useEffect(() => {
@@ -41,6 +43,22 @@ const App = () => {
           element={
             <Layout>
               <ScanPage />
+            </Layout>
+          }
+        />
+        <Route
+          path="/scan-history"
+          element={
+            <Layout>
+              <ScanHistory />
+            </Layout>
+          }
+        />
+        <Route
+          path="/scan/:scanId"
+          element={
+            <Layout>
+              <ScanDetailsPage />
             </Layout>
           }
         />

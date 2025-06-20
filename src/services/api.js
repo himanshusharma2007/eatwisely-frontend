@@ -53,12 +53,14 @@ export const uploadImageGuest = async (file) => {
 };
 
 // Fetch User Scans
-export const getScans = async () => {
+export const getScans = async (page = 1, limit = 10) => {
   try {
-    const response = await api.get('/scans');
+    const response = await api.get('/scan/scans', {
+      params: { page, limit }
+    });
     return response.data;
   } catch (error) {
-    console.error('Error in GET /scans:', error);
+    console.error('Error in GET /scan/scans:', error);
     throw error;
   }
 };
@@ -66,10 +68,10 @@ export const getScans = async () => {
 // Delete a Scan
 export const deleteScan = async (scanId) => {
   try {
-    const response = await api.delete(`/scans/${scanId}`);
+    const response = await api.delete(`/scan/scans/${scanId}`);
     return response.data;
   } catch (error) {
-    console.error(`Error in DELETE /scans/${scanId}:`, error);
+    console.error(`Error in DELETE /scan/scans/${scanId}:`, error);
     throw error;
   }
 };
