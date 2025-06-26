@@ -101,7 +101,7 @@ const AboutEatWisly = () => {
                 <div className="relative  transition-all duration-500 flex justify-center flex-col  items-center space-y-6">
                   {/* Placeholder for complex food label image */}
                   <img
-                    src="/label2.png"
+                    src="/lable3.jpg"
                     alt="Complex Food Label"
                     className="w-[250px] rounded-2xl"
                   />

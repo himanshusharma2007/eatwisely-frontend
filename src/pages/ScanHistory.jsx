@@ -147,8 +147,9 @@ const ScanHistory = () => {
               onClick={() => navigate(`/scan/${scan._id}`)}
             >
               <div className="flex items-center space-x-4">
+                {console.log('scan.imageUrl', scan.imageUrl)}
                 <img
-                  src={scan.imagePath}
+                  src={scan.imageUrl}
                   alt="Scanned food label"
                   className="w-16 h-16 object-contain rounded-lg bg-gray-50"
                 />
