@@ -1,9 +1,8 @@
 import { useEffect, useRef, useState } from 'react';
-import { Camera, Scan, Brain, FileText, Shield, CheckCircle, Upload, Zap, Target, ArrowRight, Smartphone, Eye } from 'lucide-react';
+import { Camera, Brain, FileText, ArrowRight, Play, CheckCircle2, Upload, Scan, Target } from 'lucide-react';
 
 const Steps = () => {
   const sectionRef = useRef(null);
-  const stepsRef = useRef(null);
   const [isVisible, setIsVisible] = useState(false);
   const [activeStep, setActiveStep] = useState(0);
 
@@ -27,24 +26,10 @@ const Steps = () => {
   useEffect(() => {
     if (!isVisible) return;
 
-    // Animate steps with staggered effect
-    if (stepsRef.current) {
-      const stepElements = stepsRef.current.children;
-      Array.from(stepElements).forEach((el, index) => {
-        el.style.opacity = '0';
-        el.style.transform = 'translateY(60px) scale(0.9)';
-        setTimeout(() => {
-          el.style.transition = 'all 0.8s cubic-bezier(0.4, 0, 0.2, 1)';
-          el.style.opacity = '1';
-          el.style.transform = 'translateY(0) scale(1)';
-        }, index * 200);
-      });
-    }
-
-    // Auto-cycle through steps for demonstration
+    // Auto-cycle through steps
     const interval = setInterval(() => {
       setActiveStep((prev) => (prev + 1) % 3);
-    }, 3000);
+    }, 4000);
 
     return () => clearInterval(interval);
   }, [isVisible]);
@@ -52,180 +37,194 @@ const Steps = () => {
   const steps = [
     {
       number: '01',
-      title: 'Snap & Upload',
-      subtitle: 'Capture Your Food Label',
-      description: 'Simply take a photo of any food product label using your smartphone camera or upload an existing image. Our system accepts all image formats and automatically optimizes them for analysis.',
+      title: 'Capture Label',
+      subtitle: 'Upload or photograph any food label',
+      description: 'Take a clear photo of your food product label using your device camera or upload an existing image. Our system processes all standard image formats with enterprise-grade accuracy.',
       icon: Camera,
-      color: 'from-emerald-500 to-teal-500',
-      bgColor: 'from-emerald-50 to-teal-50',
-      features: ['📱 Mobile-friendly camera', '🖼️ Multiple image formats', '⚡ Instant upload'],
-      illustration: '📸'
+      features: [
+        'High-resolution image processing',
+        'Multiple format support',
+        'Instant cloud upload'
+      ],
+      mockup: {
+        type: 'camera',
+        elements: ['Viewfinder', 'Capture Button', 'Gallery Access']
+      }
     },
     {
       number: '02',
-      title: 'AI Analysis',
-      subtitle: 'Advanced Label Processing',
-      description: 'Our cutting-edge OCR technology extracts text from your image, while our AI engine analyzes every ingredient against our comprehensive health database containing thousands of food additives and their effects.',
+      title: 'AI Processing',
+      subtitle: 'Advanced ingredient analysis',
+      description: 'Our proprietary AI engine performs optical character recognition, ingredient identification, and cross-references our comprehensive database of food additives and nutritional data.',
       icon: Brain,
-      color: 'from-teal-500 to-cyan-500',
-      bgColor: 'from-teal-50 to-cyan-50',
-      features: ['🔍 OCR text extraction', '🧠 AI ingredient analysis', '📊 Health database matching'],
-      illustration: '🔬'
+      features: [
+        'OCR text extraction',
+        'Ingredient recognition',
+        'Real-time processing'
+      ],
+      mockup: {
+        type: 'analysis',
+        elements: ['Text Recognition', 'Data Processing', 'Database Query']
+      }
     },
     {
       number: '03',
-      title: 'Get Insights',
-      subtitle: 'Personalized Health Report',
-      description: 'Receive a comprehensive report with clear health warnings, nutritional breakdown, allergen alerts, and personalized recommendations for healthier alternatives that match your dietary preferences.',
+      title: 'Health Report',
+      subtitle: 'Personalized insights delivered',
+      description: 'Receive a comprehensive health assessment with risk analysis, nutritional breakdown, allergen alerts, and evidence-based recommendations for healthier alternatives.',
       icon: FileText,
-      color: 'from-cyan-500 to-blue-500',
-      bgColor: 'from-cyan-50 to-blue-50',
-      features: ['⚠️ Health risk warnings', '🎯 Personalized recommendations', '🛡️ Allergen detection'],
-      illustration: '📋'
+      features: [
+        'Health risk assessment',
+        'Allergen detection',
+        'Alternative suggestions'
+      ],
+      mockup: {
+        type: 'report',
+        elements: ['Health Score', 'Risk Analysis', 'Recommendations']
+      }
     }
   ];
 
   return (
-    <section ref={sectionRef} className="relative py-20 bg-gradient-to-b from-white via-emerald-50/30 to-white overflow-hidden max-w-6xl mx-auto">
-    
-
-      <div className="relative container mx-auto  max-w-7xl">
-        {/* Header Section */}
-        <div className="text-center mb-16">
-          <div className="inline-flex items-center gap-2 bg-gradient-to-r from-emerald-100 to-teal-100 px-4 py-2 rounded-full mb-6">
-            <Zap className="w-5 h-5 text-emerald-600" />
-            <span className="text-emerald-700 font-semibold">How It Works</span>
+    <section ref={sectionRef} className="py-24 bg-white">
+      <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
+        {/* Header */}
+        <div className="text-center mb-20">
+          <div className="inline-flex items-center gap-2 bg-[#02C39A]/10 text-[#02C39A] px-4 py-2 rounded-lg font-medium mb-6">
+            <Play className="w-4 h-4" />
+            How It Works
           </div>
           
-          <h2 className="text-4xl sm:text-5xl lg:text-6xl font-bold mb-6 leading-tight">
-            <span className="text-slate-800">Get Started in</span>
-            <br />
-            <span className="bg-gradient-to-r from-emerald-600 via-teal-600 to-cyan-600 bg-clip-text text-transparent">
-              3 Simple Steps
+          <h2 className="text-5xl lg:text-6xl font-bold text-gray-900 mb-6 tracking-tight">
+            Three Simple Steps to
+            <span className="block bg-gradient-to-r from-[#02C39A] to-[#00A896] bg-clip-text text-transparent">
+              Safer Food Choices
             </span>
           </h2>
           
-          <p className="text-lg sm:text-xl text-slate-600 max-w-3xl mx-auto leading-relaxed">
-            Transform confusing food labels into clear health insights in under 30 seconds. 
-            No technical knowledge required – just point, click, and discover.
+          <p className="text-xl text-gray-600 max-w-3xl mx-auto leading-relaxed">
+            Professional-grade food analysis technology made accessible. 
+            Get comprehensive health insights in under 30 seconds.
           </p>
         </div>
 
-        {/* Steps Timeline */}
-        <div className="mb-16">
-          <div className="flex items-center justify-center mb-8">
-            <div className="flex items-center gap-4">
-              {steps.map((_, index) => (
-                <div key={index} className="flex items-center">
+        {/* Progress Indicator */}
+        <div className="flex justify-center mb-16">
+          <div className="flex items-center gap-2">
+            {steps.map((_, index) => (
+              <div key={index} className="flex items-center">
+                <div 
+                  className={`w-2 h-2 rounded-full transition-all duration-500 ${
+                    index <= activeStep 
+                      ? 'bg-[#02C39A] scale-125' 
+                      : 'bg-gray-300'
+                  }`}
+                />
+                {index < steps.length - 1 && (
                   <div 
-                    className={`w-4 h-4 rounded-full transition-all duration-500 ${
-                      index <= activeStep 
-                        ? 'bg-gradient-to-r from-emerald-500 to-teal-500 scale-125' 
+                    className={`w-16 h-0.5 mx-2 transition-all duration-500 ${
+                      index < activeStep 
+                        ? 'bg-[#02C39A]' 
                         : 'bg-gray-300'
                     }`}
                   />
-                  {index < steps.length - 1 && (
-                    <div 
-                      className={`w-20 h-1 mx-2 transition-all duration-500 ${
-                        index < activeStep 
-                          ? 'bg-gradient-to-r from-emerald-500 to-teal-500' 
-                          : 'bg-gray-300'
-                      }`}
-                    />
-                  )}
-                </div>
-              ))}
-            </div>
+                )}
+              </div>
+            ))}
           </div>
         </div>
 
-        {/* Steps Grid */}
-        <div ref={stepsRef} className="space-y-20">
+        {/* Steps */}
+        <div className="space-y-24">
           {steps.map((step, index) => {
             const IconComponent = step.icon;
             const isEven = index % 2 === 0;
             
             return (
-              <div key={index} className={`grid lg:grid-cols-2 gap-12 lg:gap-16 items-center ${!isEven ? 'lg:grid-flow-col-dense' : ''}`}>
-                {/* Content Side */}
-                <div className={`space-y-6 ${!isEven ? 'lg:col-start-2' : ''}`}>
-                  <div className="flex items-center gap-4 mb-4">
-                    <div className={`inline-flex items-center justify-center w-16 h-16 bg-gradient-to-r ${step.color} rounded-2xl shadow-lg`}>
-                      <IconComponent className="w-8 h-8 text-white" />
+              <div key={index} className={`grid lg:grid-cols-2 gap-16 items-center ${!isEven ? 'lg:grid-flow-col-dense' : ''}`}>
+                {/* Content */}
+                <div className={`space-y-8 ${!isEven ? 'lg:col-start-2' : ''}`}>
+                  <div className="flex items-center gap-4">
+                    <div className="flex items-center justify-center w-12 h-12 bg-[#02C39A] rounded-lg">
+                      <IconComponent className="w-6 h-6 text-white" />
                     </div>
-                    <div className={`text-6xl font-bold bg-gradient-to-r ${step.color} bg-clip-text text-transparent opacity-20`}>
+                    <span className="text-6xl font-bold text-gray-100 select-none">
                       {step.number}
-                    </div>
+                    </span>
                   </div>
                   
                   <div>
-                    <p className="text-emerald-600 font-semibold text-lg mb-2">{step.subtitle}</p>
-                    <h3 className="text-3xl sm:text-4xl font-bold text-slate-800 mb-4">
+                    <p className="text-[#02C39A] font-medium text-lg mb-2">{step.subtitle}</p>
+                    <h3 className="text-4xl font-bold text-gray-900 mb-4 tracking-tight">
                       {step.title}
                     </h3>
-                    <p className="text-lg text-slate-600 leading-relaxed mb-6">
+                    <p className="text-lg text-gray-600 leading-relaxed">
                       {step.description}
                     </p>
                   </div>
 
-                  {/* Features List */}
+                  {/* Features */}
                   <div className="space-y-3">
                     {step.features.map((feature, fIndex) => (
                       <div key={fIndex} className="flex items-center gap-3">
-                        <CheckCircle className="w-5 h-5 text-emerald-500 flex-shrink-0" />
-                        <span className="text-slate-600">{feature}</span>
+                        <CheckCircle2 className="w-5 h-5 text-[#02C39A]" />
+                        <span className="text-gray-700">{feature}</span>
                       </div>
                     ))}
                   </div>
 
-                  {/* Action Button */}
-                  <div className="pt-4">
-                    <button className={`inline-flex items-center gap-2 bg-gradient-to-r ${step.color} text-white px-6 py-3 rounded-xl font-semibold hover:shadow-lg transition-all duration-300 hover:scale-105`}>
-                      <span>Try Step {index + 1}</span>
-                      <ArrowRight className="w-4 h-4" />
-                    </button>
-                  </div>
+                  {/* CTA */}
+                  <button className="inline-flex items-center gap-2 bg-[#02C39A] text-white px-6 py-3 rounded-lg font-medium hover:bg-[#00A896] transition-colors duration-200">
+                    Learn More
+                    <ArrowRight className="w-4 h-4" />
+                  </button>
                 </div>
 
-                {/* Visual Side */}
+                {/* Visual */}
                 <div className={`${!isEven ? 'lg:col-start-1 lg:row-start-1' : ''}`}>
-                  <div className="relative group">
-                    <div className={`absolute inset-0 bg-gradient-to-r ${step.color} rounded-3xl blur-2xl opacity-20 group-hover:opacity-30 transition-all duration-500`}></div>
-                    <div className={`relative bg-gradient-to-br ${step.bgColor} rounded-3xl p-12 shadow-xl border border-white/50 group-hover:shadow-2xl transition-all duration-500`}>
-                      
-                      {/* Step Illustration */}
-                      <div className="text-center mb-8">
-                        <div className="text-8xl sm:text-9xl mb-4 animate-bounce">
-                          {step.illustration}
+                  <div className="relative">
+                    {/* Background decoration */}
+                    <div className="absolute inset-0 bg-gradient-to-br from-[#02C39A]/5 to-[#00A896]/5 rounded-2xl transform rotate-3"></div>
+                    
+                    {/* Main mockup */}
+                    <div className="relative bg-white border border-gray-200 rounded-2xl p-8 shadow-sm">
+                      {/* Mockup header */}
+                      <div className="flex items-center gap-3 mb-6">
+                        <div className="w-3 h-3 rounded-full bg-[#02C39A]"></div>
+                        <div className="flex-1 h-2 bg-gray-100 rounded-full overflow-hidden">
+                          <div 
+                            className="h-full bg-gradient-to-r from-[#02C39A] to-[#00A896] transition-all duration-1000"
+                            style={{ width: `${((index + 1) / 3) * 100}%` }}
+                          ></div>
                         </div>
-                        <div className={`inline-flex items-center justify-center w-20 h-20 bg-gradient-to-r ${step.color} rounded-3xl shadow-lg mb-4`}>
-                          <IconComponent className="w-10 h-10 text-white" />
-                        </div>
+                        <span className="text-sm font-medium text-gray-600">
+                          {Math.round(((index + 1) / 3) * 100)}%
+                        </span>
                       </div>
-
-                      {/* Mock Interface */}
-                      <div className="bg-white/80 backdrop-blur-sm rounded-2xl p-6 shadow-lg">
-                        <div className="flex items-center gap-3 mb-4">
-                          <div className={`w-3 h-3 rounded-full bg-gradient-to-r ${step.color}`}></div>
-                          <div className="flex-1 h-2 bg-gray-200 rounded-full overflow-hidden">
-                            <div 
-                              className={`h-full bg-gradient-to-r ${step.color} transition-all duration-1000`}
-                              style={{ width: `${((index + 1) / 3) * 100}%` }}
-                            ></div>
+                      
+                      {/* Mockup content */}
+                      <div className="space-y-4">
+                        {step.mockup.elements.map((element, eIndex) => (
+                          <div key={eIndex} className="flex items-center gap-3">
+                            <div className="w-8 h-8 bg-gray-50 rounded-lg flex items-center justify-center">
+                              {eIndex === 0 && <Camera className="w-4 h-4 text-gray-400" />}
+                              {eIndex === 1 && <Brain className="w-4 h-4 text-gray-400" />}
+                              {eIndex === 2 && <Target className="w-4 h-4 text-gray-400" />}
+                            </div>
+                            <div className="flex-1">
+                              <div className="h-2 bg-gray-100 rounded-full mb-1"></div>
+                              <div className="text-sm text-gray-500">{element}</div>
+                            </div>
+                            <CheckCircle2 className="w-5 h-5 text-[#02C39A]" />
                           </div>
-                          <span className="text-sm font-medium text-slate-600">{Math.round(((index + 1) / 3) * 100)}%</span>
-                        </div>
-                        
-                        <div className="space-y-3">
-                          <div className="h-4 bg-gray-200 rounded-full"></div>
-                          <div className="h-4 bg-gray-200 rounded-full w-3/4"></div>
-                          <div className="h-4 bg-gray-200 rounded-full w-1/2"></div>
-                        </div>
-                        
-                        <div className="mt-4 flex justify-center">
-                          <div className={`w-8 h-8 bg-gradient-to-r ${step.color} rounded-full flex items-center justify-center`}>
-                            <CheckCircle className="w-5 h-5 text-white" />
-                          </div>
+                        ))}
+                      </div>
+                      
+                      {/* Status indicator */}
+                      <div className="mt-6 flex items-center justify-center">
+                        <div className="flex items-center gap-2 bg-[#02C39A]/10 text-[#02C39A] px-4 py-2 rounded-lg">
+                          <div className="w-2 h-2 bg-[#02C39A] rounded-full animate-pulse"></div>
+                          <span className="text-sm font-medium">Processing</span>
                         </div>
                       </div>
                     </div>
@@ -237,22 +236,22 @@ const Steps = () => {
         </div>
 
         {/* Bottom CTA */}
-        <div className="text-center mt-20">
-          <div className="bg-gradient-to-r from-emerald-600 via-teal-600 to-cyan-600 rounded-3xl p-12 shadow-2xl">
-            <h3 className="text-3xl sm:text-4xl font-bold text-white mb-6">
-              Ready to Start Your Food Safety Journey?
+        <div className="mt-24 text-center">
+          <div className="bg-gradient-to-r from-[#02C39A] to-[#00A896] rounded-2xl p-12">
+            <h3 className="text-4xl font-bold text-white mb-6">
+              Ready to Transform Your Food Choices?
             </h3>
-            <p className="text-emerald-50 text-xl mb-8 max-w-2xl mx-auto">
-              Join thousands of health-conscious users who trust EatWisly for smarter food choices.
+            <p className="text-xl text-white/90 mb-8 max-w-2xl mx-auto">
+              Join thousands of health-conscious users making smarter decisions with EatWisly.
             </p>
             <div className="flex flex-col sm:flex-row gap-4 justify-center">
-              <button className="bg-white text-emerald-600 px-8 py-4 rounded-2xl font-bold text-lg hover:bg-emerald-50 transition-all duration-300 shadow-lg hover:shadow-xl transform hover:scale-105 flex items-center justify-center gap-3">
+              <button className="bg-white text-[#02C39A] px-8 py-4 rounded-lg font-semibold hover:bg-gray-50 transition-colors duration-200 flex items-center justify-center gap-3">
                 <Camera className="w-5 h-5" />
-                Start Analyzing Labels
+                Start Analyzing
               </button>
-              <button className="bg-white/10 backdrop-blur-sm text-white px-8 py-4 rounded-2xl font-bold text-lg hover:bg-white/20 transition-all duration-300 border border-white/20 flex items-center justify-center gap-3">
-                <Eye className="w-5 h-5" />
-                See Demo
+              <button className="bg-white/10 backdrop-blur-sm text-white px-8 py-4 rounded-lg font-semibold hover:bg-white/20 transition-colors duration-200 border border-white/20 flex items-center justify-center gap-3">
+                <Play className="w-5 h-5" />
+                Watch Demo
               </button>
             </div>
           </div>

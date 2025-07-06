@@ -108,7 +108,7 @@ const Features = () => {
               return (
                 <div key={index} className="group relative">
                   <div className="absolute inset-0 bg-gradient-to-r from-emerald-500/5 to-teal-500/5 rounded-3xl blur-xl group-hover:blur-2xl transition-all duration-500"></div>
-                  <div className="relative bg-white/90 backdrop-blur-sm rounded-3xl p-8 shadow-xl hover:shadow-2xl transition-all duration-500 border border-emerald-100/50 group-hover:border-emerald-200/70 h-full">
+                  <div className="relative bg-white/90 rounded-2xl p-8 border-emerald-300 transition-all duration-500 border hover:shadow-lg hover:cursor-pointer group-hover:border-emerald-200/70 h-full">
                     <div className={`inline-flex items-center justify-center w-16 h-16 bg-gradient-to-r ${feature.color} rounded-2xl mb-6 shadow-lg group-hover:scale-110 transition-transform duration-300`}>
                       <IconComponent className="w-8 h-8 text-white" />
                     </div>

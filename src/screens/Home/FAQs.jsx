@@ -86,7 +86,7 @@ const FAQSection = () => {
           {faqs.map((faq, index) => (
             <div
               key={index}
-              className="bg-white/80 backdrop-blur-xl rounded-2xl shadow-lg hover:shadow-xl transition-all duration-300 border border-white/50"
+              className="border border-gray-200 transition-all duration-300  bg-white"
             >
               <button
                 onClick={() => toggleFAQ(index)}

@@ -112,7 +112,7 @@ const FeedbackForm = () => {
 
       <div className="relative z-10 w-full max-w-md">
         {/* Feedback Card */}
-        <div className="bg-white/80 backdrop-blur-xl rounded-3xl shadow-2xl p-8 border border-white/50 hover:shadow-3xl transition-all duration-500">
+        <div className="bg-white/80 shadow-xl p-8 border border-white/50 hover:shadow-3xl transition-all duration-500">
           {/* Header */}
           <div ref={headingRef} className="text-center mb-8">
             <h2 className="text-3xl font-bold text-slate-800 mb-2">

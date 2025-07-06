@@ -13,6 +13,12 @@ import {
   AlertTriangle,
   Camera,
   Zap,
+  FlaskConical,
+  AlertCircle,
+  BarChart3,
+  Search,
+  X,
+  Smartphone 
 } from "lucide-react";
 
 const AboutEatWisly = () => {
@@ -87,10 +93,7 @@ const AboutEatWisly = () => {
   ];
 
   return (
-    <section
-      ref={sectionRef}
-      className="relative py-20  overflow-hidden "
-    >
+    <section ref={sectionRef} className="relative py-20  overflow-hidden ">
       <div className="relative container mx-auto  max-w-6xl">
         {/* Hero Section with Problem Statement */}
         <div ref={heroRef} className="mb-20">
@@ -142,75 +145,104 @@ const AboutEatWisly = () => {
                   risk.
                 </p>
                 <p className="text-lg sm:text-xl text-slate-700 leading-relaxed">
-                  Don't worry! Our platform is designed to decode
-                  these labels, providing you with simple, clear, and actionable
-                  health insights to make safer food choices.
+                  Don't worry! Our platform is designed to decode these labels,
+                  providing you with simple, clear, and actionable health
+                  insights to make safer food choices.
                 </p>
-
-              
               </div>
-
-             
             </div>
           </div>
           <div className="flex flex-col border-b items-center justify-between mt-20">
-         
             <div className="flex flex-col sm:flex-row justify-between gap-12 mb-12 text-zinc-900 mx-auto">
               {/* Left Side - The Problem */}
               <div className="space-y-8 w-full sm:w-1/2">
                 <div className="bg-gradient-to-br from-red-500/20 to-orange-500/20 rounded-2xl p-8 border border-red-500/30">
-                  <h2 className="text-3xl font-bold  mb-6 flex items-center gap-3">
+                  <h2 className="text-3xl font-bold mb-6 flex items-center gap-3">
                     <AlertTriangle className="w-8 h-8 text-red-400" />
                     The Hidden Danger
                   </h2>
-                  <p className=" text-lg mb-6">
+                  <p className="text-lg mb-6">
                     Every day, millions of people unknowingly consume harmful
                     ingredients hidden in complex, confusing food labels.
                   </p>
                   <ul className="space-y-2">
                     {[
-                      "🧪 Unpronounceable chemical additives",
-                      "⚠️ Hidden allergens and preservatives",
-                      "📊 Misleading nutritional information",
-                      "🔍 Microscopic text and complex terms",
-                      "❌ No clear health impact warnings",
+                      {
+                        icon: FlaskConical,
+                        text: "Unpronounceable chemical additives",
+                        color: "text-red-500",
+                      },
+                      {
+                        icon: AlertCircle,
+                        text: "Hidden allergens and preservatives",
+                        color: "text-red-500",
+                      },
+                      {
+                        icon: BarChart3,
+                        text: "Misleading nutritional information",
+                        color: "text-red-500",
+                      },
+                      {
+                        icon: Search,
+                        text: "Microscopic text and complex terms",
+                        color: "text-red-400",
+                      },
+                      {
+                        icon: X,
+                        text: "No clear health impact warnings",
+                        color: "text-red-600",
+                      },
                     ].map((item, index) => (
-                      <li
-                        key={index}
-                        className="flex items-center gap-3 "
-                      >
-                        <span className="text-xl">{item.split(" ")[0]}</span>
-                        <span>{item.substring(item.indexOf(" ") + 1)}</span>
+                      <li key={index} className="flex items-center gap-3">
+                        <item.icon className={`w-5 h-5 ${item.color}`} />
+                        <span>{item.text}</span>
                       </li>
                     ))}
                   </ul>
                 </div>
               </div>
 
-              <div className="space-y-8 w-full sm:w-1/2 b">
+              <div className="space-y-8 w-full sm:w-1/2">
                 <div className="bg-gradient-to-br from-emerald-500/20 to-teal-500/20 rounded-2xl p-8 border border-emerald-500/30 h-full">
-                  <h2 className="text-3xl font-bold  mb-6 flex items-center gap-3">
+                  <h2 className="text-3xl font-bold mb-6 flex items-center gap-3">
                     <Zap className="w-8 h-8 text-emerald-400" />
                     The EatWisly Solution
                   </h2>
-                  <p className=" text-lg mb-6">
+                  <p className="text-lg mb-6">
                     Our revolutionary AI platform makes food safety simple,
                     instant, and accessible to everyone.
                   </p>
                   <ul className="space-y-2">
                     {[
-                      "📱 Just snap a photo of any food label",
-                      "⚡ Get instant AI-powered analysis",
-                      "🚨 Receive clear health risk warnings",
-                      "✅ Discover healthier alternatives",
-                      "👨‍👩‍👧‍👦 Protect your entire family's health",
+                      {
+                        icon: Camera,
+                        text: "Just snap a photo of any food label",
+                        color: "text-emerald-500",
+                      },
+                      {
+                        icon: Zap,
+                        text: "Get instant AI-powered analysis",
+                        color: "text-emerald-500",
+                      },
+                      {
+                        icon: AlertTriangle,
+                        text: "Receive clear health risk warnings",
+                        color: "text-emerald-500",
+                      },
+                      {
+                        icon: Heart,
+                        text: "Discover healthier alternatives",
+                        color: "text-emerald-500",
+                      },
+                      {
+                        icon: Users,
+                        text: "Protect your entire family's health",
+                        color: "text-emerald-500",
+                      },
                     ].map((item, index) => (
-                      <li
-                        key={index}
-                        className="flex items-center gap-3 "
-                      >
-                        <span className="text-xl">{item.split(" ")[0]}</span>
-                        <span>{item.substring(item.indexOf(" ") + 1)}</span>
+                      <li key={index} className="flex items-center gap-3">
+                        <item.icon className={`w-5 h-5 ${item.color}`} />
+                        <span>{item.text}</span>
                       </li>
                     ))}
                   </ul>
@@ -230,7 +262,7 @@ const AboutEatWisly = () => {
             return (
               <div key={index} className="group relative">
                 <div className="absolute inset-0 bg-gradient-to-r from-emerald-500/10 to-teal-500/10 rounded-3xl blur-lg group-hover:blur-xl transition-all duration-300"></div>
-                <div className="relative text-center p-8 bg-white/90 backdrop-blur-sm rounded-3xl shadow-xl hover:shadow-2xl transition-all duration-300 border border-emerald-100/50 group-hover:border-emerald-200/70">
+                <div className="relative text-center p-8 bg-white/90 backdrop-blur-sm rounded-3xl border-emerald-300 border  group-hover:border-emerald-200/70">
                   <div className="inline-flex items-center justify-center w-16 h-16 bg-gradient-to-r from-emerald-500 to-teal-500 rounded-2xl mb-4 shadow-lg">
                     <IconComponent className="w-8 h-8 text-white" />
                   </div>
