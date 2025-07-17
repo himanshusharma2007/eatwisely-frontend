@@ -67,6 +67,7 @@ const COMMON_ALLERGIES = [
 
 const ProfilePage = () => {
   const user = useSelector(selectUserProfile);
+  console.log('user', user)
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const [isLoading, setIsLoading] = useState(false);
@@ -156,13 +157,13 @@ const ProfilePage = () => {
   const handleImageChange = (e) => {
     const file = e.target.files[0];
     if (file) {
-      console.log('file', file)
-  // Validate file size (max 5MB)
-  const maxSize = 5 * 1024 * 1024; // 5MB in bytes
-  if (file.size > maxSize) {
-    setErrors('Image size should be less than 5MB');
-    return;
-  }
+      console.log("file", file);
+      // Validate file size (max 5MB)
+      const maxSize = 5 * 1024 * 1024; // 5MB in bytes
+      if (file.size > maxSize) {
+        setErrors("Image size should be less than 5MB");
+        return;
+      }
 
       setProfileImage(file);
       const reader = new FileReader();
@@ -292,7 +293,7 @@ const ProfilePage = () => {
     formData.allergies.forEach((allergy) => {
       submitData.append("allergies[]", allergy);
     });
-    console.log('profileImage', profileImage)
+    console.log("profileImage", profileImage);
     if (profileImage) submitData.append("profileImage", profileImage);
     for (let [key, value] of submitData.entries()) {
       console.log(`${key}:`, value);
@@ -324,7 +325,15 @@ const ProfilePage = () => {
   };
 
   const completionPercentage = calculateProfileCompletion();
-
+  const progressColor = () =>{
+    if (completionPercentage >= 60) {
+      return "text-green-500";
+    } else if (completionPercentage >= 45) {
+      return "text-yellow-500";
+    } else {
+      return "text-red-500";
+    }
+  }
   return (
     <section className="relative bg-gradient-to-br from-emerald-50 via-teal-50 to-cyan-50 py-16 px-4 sm:px-6 lg:px-8 min-h-screen flex items-center justify-center">
       <div className="relative z-10 w-full max-w-2xl">
@@ -359,7 +368,7 @@ const ProfilePage = () => {
                     strokeDashoffset={`${
                       2 * Math.PI * 45 * (1 - completionPercentage / 100)
                     }`}
-                    className="text-emerald-500 transition-all duration-500"
+                    className={`${progressColor()} transition-all duration-500`}
                     strokeLinecap="round"
                   />
                 </svg>
@@ -392,8 +401,9 @@ const ProfilePage = () => {
               />
             </div>
             <h2 className="text-3xl font-bold text-slate-800 mb-2">
-              Your Profile
+              Hi {user?.name?.split(" ")[0] || "there"}!
             </h2>
+
             <p className="text-slate-600">
               Complete your profile for better recommendations
             </p>
@@ -409,7 +419,7 @@ const ProfilePage = () => {
                 </label>
                 <div className="relative">
                   <User className="absolute left-4 top-1/2 transform -translate-y-1/2 w-5 h-5 text-slate-400" />
-                  {console.log('formData.name', formData.name)}
+                  {console.log("formData.name", formData.name)}
                   <input
                     type="text"
                     name="name"
@@ -607,7 +617,8 @@ const ProfilePage = () => {
                 )}
               </div>
               {formData.diseases.length > 0 && (
-                <div className="flex flex-wrap gap-2 mt-3">
+                <div className="flex flex-wrap  items-center gap-2 mt-3">
+                  <span className="text-sm text-emerald-500">Added : </span>
                   {formData.diseases.map((disease, index) => (
                     <span
                       key={index}
@@ -670,7 +681,9 @@ const ProfilePage = () => {
                 )}
               </div>
               {formData.allergies.length > 0 && (
-                <div className="flex flex-wrap gap-2 mt-3">
+                <div className="flex flex-wrap items-center gap-2 mt-3">
+                  <span className="text-sm text-emerald-500">Added : </span>
+
                   {formData.allergies.map((allergy, index) => (
                     <span
                       key={index}

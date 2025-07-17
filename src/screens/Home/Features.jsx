@@ -1,5 +1,6 @@
 import { useEffect, useRef } from "react";
 import { Heart, Shield, Users, Target, Lightbulb, Award, Scan, Brain, AlertTriangle, CheckCircle } from "lucide-react";
+import { Link } from "react-router-dom";
 
 const Features = () => {
   const sectionRef = useRef(null);
@@ -134,9 +135,10 @@ const Features = () => {
             <p className="text-emerald-50 text-xl mb-8 max-w-2xl mx-auto">
               Join thousands of users who are already making smarter food choices with EatWisly's AI-powered analysis.
             </p>
-            <button className="bg-white text-emerald-600 px-8 py-4 rounded-2xl font-bold text-lg hover:bg-emerald-50 transition-all duration-300 shadow-lg hover:shadow-xl transform hover:scale-105">
+            <Link to="/scan" className="bg-white text-emerald-600 px-8 py-4 rounded-2xl font-bold text-lg hover:bg-emerald-50 transition-all duration-300 shadow-lg hover:shadow-xl transform hover:scale-105"
+            >
               Try EatWisly Now
-            </button>
+            </Link>
           </div>
         </div>
     </section>

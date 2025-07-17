@@ -1,25 +1,12 @@
+// Main ScanPage Component
+
 import React, { useState, useRef, useEffect } from "react";
-import {
-  Camera,
-  Upload,
-  AlertCircle,
-  Loader,
-  CheckCircle,
-  X,
-  ChevronDown,
-  ChevronUp,
-  Info,
-  Zap,
-  Shield,
-  Heart,
-  Apple,
-  Save
-} from "lucide-react";
-import { uploadImageAuth, uploadImageGuest, saveScanResult } from "../services/api";
 import { useSelector } from "react-redux";
 import { selectUserProfile } from "../redux/slices/userSlice";
 import { useNavigate } from "react-router-dom";
-
+import { uploadImageAuth, uploadImageGuest, saveScanResult } from "../services/api";
+import ImageUploadCard from "../screens/Scan/ImageUploadCard";
+import ScanResults from "../screens/Scan/ScanResults";
 const ScanPage = () => {
   const [image, setImage] = useState(null);
   const [previewUrl, setPreviewUrl] = useState(null);
@@ -38,7 +25,6 @@ const ScanPage = () => {
   const formRef = useRef(null);
   const resultRef = useRef(null);
 
-  // Enhanced animations on mount
   useEffect(() => {
     const animateElements = () => {
       if (headingRef.current) {
@@ -69,66 +55,6 @@ const ScanPage = () => {
       if (previewUrl) URL.revokeObjectURL(previewUrl);
     };
   }, [previewUrl]);
-
-  // Drag and drop handlers
-  const handleDrag = (e) => {
-    e.preventDefault();
-    e.stopPropagation();
-    if (e.type === "dragenter" || e.type === "dragover") {
-      setDragActive(true);
-    } else if (e.type === "dragleave") {
-      setDragActive(false);
-    }
-  };
-
-  const handleDrop = (e) => {
-    e.preventDefault();
-    e.stopPropagation();
-    setDragActive(false);
-
-    if (e.dataTransfer.files && e.dataTransfer.files[0]) {
-      const file = e.dataTransfer.files[0];
-      if (file.type.startsWith("image/")) {
-        setImage(file);
-        setPreviewUrl(URL.createObjectURL(file));
-        setError("");
-        setResult(null);
-        setSaveMessage("");
-      }
-    }
-  };
-
-  const handleImageChange = (e) => {
-    const file = e.target.files[0];
-    if (file) {
-      setImage(file);
-      setPreviewUrl(URL.createObjectURL(file));
-      setError("");
-      setResult(null);
-      setSaveMessage("");
-    }
-  };
-
-  const handleCaptureClick = () => {
-    fileInputRef.current.setAttribute("capture", "environment");
-    fileInputRef.current.click();
-  };
-
-  const handleUploadClick = () => {
-    fileInputRef.current.removeAttribute("capture");
-    fileInputRef.current.click();
-  };
-
-  const handleDeleteImage = () => {
-    setImage(null);
-    setPreviewUrl(null);
-    setError("");
-    setResult(null);
-    setSaveMessage("");
-    if (previewUrl) {
-      URL.revokeObjectURL(previewUrl);
-    }
-  };
 
   const handleSubmit = async () => {
     if (!image) {
@@ -176,7 +102,6 @@ const ScanPage = () => {
       setSaveMessage("No scan result to save. Please analyze an image first.");
       return;
     }
-    console.log('result', result)
 
     setIsSaving(true);
     setSaveMessage("");
@@ -187,7 +112,7 @@ const ScanPage = () => {
       formData.append("extractedText", result.extractedText);
       formData.append("analysis", JSON.stringify(result.analysis));
 
-       await saveScanResult(formData);
+      await saveScanResult(formData);
       setSaveMessage(`Scan saved successfully! `);
     } catch (error) {
       setSaveMessage(
@@ -199,520 +124,47 @@ const ScanPage = () => {
     }
   };
 
-  // Helper function to get health score color and label
-  const getHealthScoreInfo = (score) => {
-    if (score >= 80)
-      return {
-        color: "bg-gradient-to-r from-green-400 to-emerald-500",
-        label: "Excellent",
-        textColor: "text-green-600",
-        bgColor: "bg-gradient-to-br from-green-50 to-emerald-50",
-        borderColor: "border-green-200",
-      };
-    if (score >= 60)
-      return {
-        color: "bg-gradient-to-r from-yellow-400 to-amber-500",
-        label: "Good",
-        textColor: "text-yellow-600",
-        bgColor: "bg-gradient-to-br from-yellow-50 to-amber-50",
-        borderColor: "border-yellow-200",
-      };
-    if (score >= 40)
-      return {
-        color: "bg-gradient-to-r from-orange-400 to-red-400",
-        label: "Fair",
-        textColor: "text-orange-600",
-        bgColor: "bg-gradient-to-br from-orange-50 to-red-50",
-        borderColor: "border-orange-200",
-      };
-    return {
-        color: "bg-gradient-to-r from-red-400 to-red-600",
-        label: "Poor",
-        textColor: "text-red-600",
-        bgColor: "bg-gradient-to-br from-red-50 to-red-100",
-        borderColor: "border-red-200",
-    };
-  };
-
-  // Helper function to get recommendation icon
-  const getRecommendationIcon = (type) => {
-    switch (type) {
-      case "warning":
-        return <AlertCircle className="w-5 h-5 mr-2 text-red-600" />;
-      case "positive":
-        return <CheckCircle className="w-5 h-5 mr-2 text-green-600" />;
-      case "info":
-        return <Info className="w-5 h-5 mr-2 text-blue-600" />;
-      default:
-        return <Info className="w-5 h-5 mr-2 text-blue-600" />;
-    }
-  };
-
   return (
     <section className="relative min-h-[calc(100vh-94px)] py-4 sm:py-8 lg:py-16 px-4 sm:px-0">
       <div className="absolute inset-0 bg-gradient-to-br from-emerald-50 via-teal-50 to-cyan-50 opacity-60"></div>
 
       <div className="relative z-10 w-full max-w-6xl mx-auto">
         <div className="flex flex-col xl:flex-row xl:gap-8 gap-6 justify-center">
-          {/* Scan Card */}
-          <div className="w-full xl:w-[40%] xl:max-w-lg mx-auto xl:mx-0">
-            <div className="bg-white/90 backdrop-blur-xl rounded-2xl sm:rounded-3xl shadow-xl border border-white/60 overflow-hidden hover:shadow-2xl transition-all duration-500 hover:scale-[1.02]">
-              <div className="bg-gradient-to-r from-emerald-500 to-teal-500 p-6 sm:p-8 text-center">
-                <div ref={headingRef}>
-                  <h2 className="text-2xl sm:text-3xl font-bold text-white mb-2">
-                    Scan Food Label
-                  </h2>
-                  <p className="text-emerald-100 text-sm sm:text-base">
-                    Get instant health insights from any food label
-                  </p>
-                </div>
-              </div>
-
-              <div ref={formRef} className="p-6 sm:p-8 space-y-6">
-                <div className="relative">
-                  <input
-                    type="file"
-                    accept="image/*"
-                    onChange={handleImageChange}
-                    ref={fileInputRef}
-                    className="hidden"
-                    aria-label="Upload food label image"
-                  />
-
-                  {!previewUrl ? (
-                    <div
-                      className={`sm:border-2 sm:border-dashed sm:p-8 rounded-2xl text-center transition-all duration-300 ${
-                        dragActive
-                          ? "border-emerald-400 bg-emerald-50 scale-105"
-                          : "border-gray-300 hover:border-emerald-300 hover:bg-emerald-50/50"
-                      }`}
-                      onDragEnter={handleDrag}
-                      onDragLeave={handleDrag}
-                      onDragOver={handleDrag}
-                      onDrop={handleDrop}
-                    >
-                      <div className="space-y-4">
-                        <div className="inline-flex items-center justify-center w-16 h-16 bg-emerald-100 rounded-full">
-                          <Upload className="w-8 h-8 text-emerald-600" />
-                        </div>
-                        <div>
-                          <p className="text-lg font-semibold text-gray-700 mb-2">
-                            Drop your image here
-                          </p>
-                          <p className="text-sm text-gray-500 mb-4">
-                            or choose an option below
-                          </p>
-                        </div>
-                        <div className="flex flex-col sm:flex-row gap-3">
-                          <button
-                            onClick={handleCaptureClick}
-                            className="flex-1 bg-gradient-to-r from-emerald-500 to-teal-500 text-white px-6 py-3 rounded-xl font-medium transition-all duration-300 hover:shadow-lg hover:scale-105 transform active:scale-95"
-                            aria-label="Take photo of food label"
-                          >
-                            <Camera className="w-5 h-5 mr-2 inline" />
-                            <span className="text-nowrap">Take Photo</span>
-                          </button>
-                          <button
-                            onClick={handleUploadClick}
-                            className="flex-1 border-2 border-emerald-200 text-emerald-600 px-6 py-3 rounded-xl font-medium transition-all duration-300 hover:bg-emerald-50 hover:border-emerald-300 hover:scale-105 transform active:scale-95"
-                            aria-label="Browse files for food label image"
-                          >
-                            <Upload className="w-5 h-5 mr-2 inline" />
-                            <span className="text-nowrap">Browse Files</span>
-                          </button>
-                        </div>
-                      </div>
-                    </div>
-                  ) : (
-                    <div className="relative group">
-                      <div className="rounded-2xl overflow-hidden shadow-lg">
-                        <img
-                          src={previewUrl}
-                          alt="Selected food label"
-                          className="w-full h-auto max-h-64 object-contain bg-gray-50"
-                        />
-                      </div>
-                      <button
-                        onClick={handleDeleteImage}
-                        className="absolute -top-3 -right-3 bg-red-500 hover:bg-red-600 text-white rounded-full p-2 shadow-lg transform hover:scale-110 transition-all duration-200"
-                        aria-label="Remove selected image"
-                      >
-                        <X className="w-4 h-4" />
-                      </button>
-                      <div className="absolute inset-0 bg-black/0 group-hover:bg-black/10 transition-all duration-200 rounded-2xl"></div>
-                    </div>
-                  )}
-                </div>
-
-                {error && (
-                  <div className="bg-red-50 border-l-4 border-red-400 p-4 rounded-lg animate-shake">
-                    <div className="flex items-center">
-                      <AlertCircle className="w-5 h-5 text-red-600 mr-3 flex-shrink-0" />
-                      <span className="text-red-700 text-sm font-medium">
-                        {error}
-                      </span>
-                    </div>
-                  </div>
-                )}
-
-                <button
-                  onClick={handleSubmit}
-                  disabled={isLoading || !image}
-                  className={`w-full bg-gradient-to-r from-emerald-500 to-teal-500 text-white py-4 px-6 rounded-xl font-semibold text-lg transition-all duration-300 transform ${
-                    isLoading || !image
-                      ? "opacity-50 cursor-not-allowed"
-                      : "hover:shadow-xl hover:scale-105 active:scale-95 hover:-translate-y-1"
-                  }`}
-                  aria-label="Analyze food label"
-                >
-                  {isLoading ? (
-                    <div className="flex items-center justify-center">
-                      <Loader className="w-6 h-6 animate-spin mr-2" />
-                      Analyzing...
-                    </div>
-                  ) : (
-                    <div className="flex items-center justify-center">
-                      <Zap className="w-6 h-6 mr-2" />
-                      Analyze Label
-                    </div>
-                  )}
-                </button>
-              </div>
-            </div>
-          </div>
-
-          {/* Results Section */}
+          <ImageUploadCard
+            image={image}
+            setImage={setImage}
+            previewUrl={previewUrl}
+            setPreviewUrl={setPreviewUrl}
+            setError={setError}
+            setResult={setResult}
+            setSaveMessage={setSaveMessage}
+            isLoading={isLoading}
+            handleSubmit={handleSubmit}
+            dragActive={dragActive}
+            setDragActive={setDragActive}
+            fileInputRef={fileInputRef}
+            headingRef={headingRef}
+            formRef={formRef}
+            error={error}
+          />
           {result && (
-            <div ref={resultRef} className="w-full xl:w-[60%]">
-              <div className="bg-white/95 backdrop-blur-xl rounded-2xl sm:rounded-3xl shadow-xl border border-white/60 overflow-hidden">
-                <div className="p-6 sm:p-8 overflow-y-auto sm:overflow-y-visible max-h-[calc(100vh-200px)] sm:max-h-full custom-scrollbar">
-                  {/* Save Button and Message */}
-                  <div className="mb-6">
-                    <div className="flex justify-end">
-                      <button
-                        onClick={handleSaveScan}
-                        disabled={isSaving || (user && !result)}
-                        className={`flex items-center bg-gradient-to-r from-blue-500 to-indigo-500 text-white px-6 py-3 rounded-xl font-medium transition-all duration-300 hover:shadow-lg hover:scale-105 transform active:scale-95 ${
-                          isSaving || (user && !result)
-                            ? "opacity-50 cursor-not-allowed"
-                            : ""
-                        }`}
-                        aria-label={user ? "Save scan result" : "Login to save scan"}
-                      >
-                        <Save className="w-5 h-5 mr-2" />
-                        {user ? (isSaving ? "Saving..." : "Save Scan") : "Login to Save"}
-                      </button>
-                    </div>
-                    {saveMessage && (
-                      <div className={`mt-4 p-4 rounded-lg flex items-center animate-shake ${
-                        saveMessage.includes("successfully")
-                          ? "bg-green-50 border-l-4 border-green-400"
-                          : "bg-red-50 border-l-4 border-red-400"
-                      }`}>
-                        <span className={`text-sm font-medium ${
-                          saveMessage.includes("successfully")
-                            ? "text-green-700"
-                            : "text-red-700"
-                        }`}>
-                          {saveMessage}
-                        </span>
-                      </div>
-                    )}
-                  </div>
-
-                  <div className="space-y-8">
-                    {/* Health Impact */}
-                    {result.analysis?.healthImpact && (
-                      <div className="bg-gradient-to-br from-blue-50 to-indigo-50 border border-blue-200 rounded-xl p-6">
-                        <h4 className="text-lg font-bold text-slate-800 mb-4 flex items-center">
-                          <Info className="w-5 h-5 mr-2 text-blue-600" />
-                          Health Impact
-                        </h4>
-                        <p className="text-sm text-slate-700 leading-relaxed">
-                          {result.analysis.healthImpact}
-                        </p>
-                      </div>
-                    )}
-
-                    {/* Health Score */}
-                    {result.analysis?.healthScore && (
-                      <div
-                        className={`${
-                          getHealthScoreInfo(result.analysis.healthScore).bgColor
-                        } ${
-                          getHealthScoreInfo(result.analysis.healthScore).borderColor
-                        } border-2 rounded-2xl p-6 text-center relative overflow-hidden`}
-                      >
-                        <div className="absolute inset-0 bg-gradient-to-br from-white/20 to-transparent"></div>
-                        <div className="relative z-10">
-                          <h4 className="text-xl font-bold text-slate-800 mb-4 flex items-center justify-center">
-                            <Heart className="w-6 h-6 mr-2 text-emerald-600" />
-                            Health Score
-                          </h4>
-                          <div className="mb-6">
-                            <div className="text-5xl sm:text-6xl font-bold text-slate-800 mb-2">
-                              {result.analysis.healthScore}
-                              <span className="text-2xl text-slate-500">/100</span>
-                            </div>
-                            <div
-                              className={`inline-block px-4 py-2 rounded-full font-semibold ${
-                                getHealthScoreInfo(result.analysis.healthScore).textColor
-                              } bg-white/80`}
-                            >
-                              {getHealthScoreInfo(result.analysis.healthScore).label}
-                            </div>
-                          </div>
-                          <div className="max-w-md mx-auto">
-                            <div className="flex justify-between text-sm text-slate-600 mb-3">
-                              <span>Poor</span>
-                              <span>Fair</span>
-                              <span>Good</span>
-                              <span>Excellent</span>
-                            </div>
-                            <div className="w-full bg-white/60 rounded-full h-4 shadow-inner">
-                              <div
-                                className={`${
-                                  getHealthScoreInfo(result.analysis.healthScore).color
-                                } h-4 rounded-full transition-all duration-2000 ease-out shadow-lg`}
-                                style={{ width: `${result.analysis.healthScore}%` }}
-                              ></div>
-                            </div>
-                          </div>
-                        </div>
-                      </div>
-                    )}
-
-                    {/* Should Eat Recommendation */}
-                    {result.analysis?.shouldEat && (
-                      <div className="bg-gradient-to-br from-teal-50 to-cyan-50 border border-teal-200 rounded-xl p-6">
-                        <div className="flex space-x-2 items-center">
-                          <h4 className="text-lg font-bold text-slate-800 flex items-center">
-                            <CheckCircle className="w-5 h-5 mr-2 text-teal-600" />
-                            Should You Eat This?
-                          </h4>
-                          <div className="flex items-center text-lg">
-                            <span
-                              className={`inline-block px-4 py-2 rounded-full font-semibold ${
-                                result.analysis.shouldEat === "Yes"
-                                  ? " text-green-800"
-                                  : result.analysis.shouldEat === "No"
-                                  ? " text-red-800"
-                                  : " text-yellow-800"
-                              }`}
-                            >
-                              {result.analysis.shouldEat}
-                            </span>
-                          </div>
-                        </div>
-                        <p className="text-sm text-slate-700 leading-relaxed">
-                          {result.analysis.shouldEatReason}
-                        </p>
-                      </div>
-                    )}
-
-                    {/* Nutritional Info */}
-                    {result.analysis?.nutritionalInfo && (
-                      <div>
-                        <h4 className="text-lg font-bold text-slate-800 mb-4 flex items-center">
-                          <Info className="w-5 h-5 mr-2 text-blue-600" />
-                          Nutritional Breakdown
-                        </h4>
-                        <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                          <div className="bg-gradient-to-br from-blue-50 to-indigo-50 border border-blue-200 rounded-xl p-5 text-center hover:shadow-md transition-all duration-300">
-                            <div className="text-3xl font-bold text-blue-600 mb-2">
-                              {result.analysis.nutritionalInfo.totalSugar}g
-                            </div>
-                            <div className="text-sm font-medium text-slate-600">Total Sugar</div>
-                            <div className="w-full bg-blue-200 rounded-full h-2 mt-3">
-                              <div
-                                className="bg-blue-500 h-2 rounded-full"
-                                style={{
-                                  width: `${Math.min(
-                                    (result.analysis.nutritionalInfo.totalSugar / 50) * 100,
-                                    100
-                                  )}%`,
-                                }}
-                              ></div>
-                            </div>
-                          </div>
-                          <div className="bg-gradient-to-br from-orange-50 to-red-50 border border-orange-200 rounded-xl p-5 text-center hover:shadow-md transition-all duration-300">
-                            <div className="text-3xl font-bold text-orange-600 mb-2">
-                              {result.analysis.nutritionalInfo.totalSodium}mg
-                            </div>
-                            <div className="text-sm font-medium text-slate-600">Total Sodium</div>
-                            <div className="w-full bg-orange-200 rounded-full h-2 mt-3">
-                              <div
-                                className="bg-orange-500 h-2 rounded-full"
-                                style={{
-                                  width: `${Math.min(
-                                    (result.analysis.nutritionalInfo.totalSodium / 2300) * 100,
-                                    100
-                                  )}%`,
-                                }}
-                              ></div>
-                            </div>
-                          </div>
-                          {result.analysis.nutritionalInfo.caloriesPerServing && (
-                            <div className="bg-gradient-to-br from-green-50 to-emerald-50 border border-green-200 rounded-xl p-5 text-center hover:shadow-md transition-all duration-300">
-                              <div className="text-3xl font-bold text-green-600 mb-2">
-                                {result.analysis.nutritionalInfo.caloriesPerServing}
-                              </div>
-                              <div className="text-sm font-medium text-slate-600">Calories/Serving</div>
-                            </div>
-                          )}
-                          {result.analysis.nutritionalInfo.servingSize && (
-                            <div className="bg-gradient-to-br from-purple-50 to-indigo-50 border border-purple-200 rounded-xl p-5 text-center hover:shadow-md transition-all duration-300">
-                              <div className="text-lg font-bold text-purple-600 mb-2">
-                                {result.analysis.nutritionalInfo.servingSize}
-                              </div>
-                              <div className="text-sm font-medium text-slate-600">Serving Size</div>
-                            </div>
-                          )}
-                        </div>
-                      </div>
-                    )}
-
-                    {/* Harmful Ingredients */}
-                    {result.analysis?.harmfulIngredients?.length > 0 && (
-                      <div>
-                        <h4 className="text-lg font-bold text-slate-800 mb-4 flex items-center">
-                          <AlertCircle className="w-5 h-5 mr-2 text-red-600" />
-                          Ingredients of Concern
-                        </h4>
-                        <div className="space-y-4">
-                          {result.analysis.harmfulIngredients.map((ingredient, index) => (
-                            <div
-                              key={index}
-                              className="bg-gradient-to-r from-red-50 to-orange-50 border-l-4 border-red-400 rounded-lg p-4 hover:shadow-md transition-all duration-300"
-                            >
-                              <div className="flex flex-col sm:flex-row sm:items-start sm:justify-between mb-3">
-                                <h5 className="font-bold text-red-700 text-base">{ingredient.name}</h5>
-                                <span
-                                  className={`inline-block px-3 py-1 rounded-full text-xs font-semibold mt-2 sm:mt-0 ${
-                                    ingredient.severity === "High"
-                                      ? "bg-red-200 text-red-800"
-                                      : ingredient.severity === "Medium"
-                                      ? "bg-yellow-200 text-yellow-800"
-                                      : "bg-orange-200 text-orange-800"
-                                  }`}
-                                >
-                                  {ingredient.severity} Risk
-                                </span>
-                              </div>
-                              <p className="text-sm text-slate-700 mb-3 leading-relaxed">{ingredient.warning}</p>
-                              {ingredient.alternative && (
-                                <div className="bg-green-100 border border-green-200 rounded-lg p-3">
-                                  <span className="font-semibold text-green-700 text-sm">💡 Better Alternative: </span>
-                                  <span className="text-green-600 text-sm">{ingredient.alternative}</span>
-                                </div>
-                              )}
-                            </div>
-                          ))}
-                        </div>
-                      </div>
-                    )}
-
-                    {/* Healthy Alternatives - Collapsible */}
-                    {result.analysis?.healthyAlternatives?.length > 0 && (
-                      <div>
-                        <button
-                          onClick={() => setShowAlternatives(!showAlternatives)}
-                          className="w-full flex items-center justify-between text-lg font-bold text-slate-800 mb-4 p-3 bg-green-50 rounded-xl hover:bg-green-100 transition-all duration-200"
-                          aria-expanded={showAlternatives}
-                          aria-controls="healthy-alternatives"
-                        >
-                          <span className="flex items-center">
-                            <Apple className="w-5 h-5 mr-2 text-green-600" />
-                            Healthy Alternatives
-                          </span>
-                          {showAlternatives ? <ChevronUp className="w-5 h-5" /> : <ChevronDown className="w-5 h-5" />}
-                        </button>
-                        {showAlternatives && (
-                          <div
-                            id="healthy-alternatives"
-                            className="bg-green-50 border border-green-200 rounded-xl p-4"
-                          >
-                            <ul className="list-disc list-inside text-sm text-slate-700 space-y-2">
-                              {result.analysis.healthyAlternatives.map((alt, index) => (
-                                <li key={index}>{alt}</li>
-                              ))}
-                            </ul>
-                          </div>
-                        )}
-                      </div>
-                    )}
-
-                    {/* Recommendations */}
-                    {result.analysis?.recommendations?.length > 0 && (
-                      <div>
-                        <h4 className="text-lg font-bold text-slate-800 mb-4 flex items-center">
-                          <CheckCircle className="w-5 h-5 mr-2 text-emerald-600" />
-                          Health Recommendations
-                        </h4>
-                        <div className="space-y-4">
-                          {result.analysis.recommendations.map((rec, index) => (
-                            <div
-                              key={index}
-                              className="bg-gradient-to-r from-emerald-50 to-teal-50 border border-emerald-200 rounded-xl p-5 hover:shadow-md transition-all duration-300"
-                            >
-                              <h5 className="font-bold text-emerald-700 text-base mb-2 flex items-center">
-                                {getRecommendationIcon(rec.type)}
-                                {rec.title}
-                              </h5>
-                              <p className="text-sm text-slate-700 leading-relaxed">{rec.message}</p>
-                            </div>
-                          ))}
-                        </div>
-                      </div>
-                    )}
-
-                    {/* Additional Notes */}
-                    {result.analysis?.additionalNotes && (
-                      <div className="bg-gradient-to-br from-pink-200 to-rose-100 border border-gray-200 rounded-xl p-6">
-                        <h4 className="text-lg font-bold text-slate-800 mb-4 flex items-center">
-                          <Info className="w-5 h-5 mr-2 text-gray-600" />
-                          Personal Advise
-                        </h4>
-                        <p className="text-sm text-slate-700 leading-relaxed">{result.analysis.additionalNotes}</p>
-                      </div>
-                    )}
-
-                    {/* Extracted Text - Collapsible */}
-                    {result.extractedText && (
-                      <div>
-                        <button
-                          onClick={() => setShowExtractedText(!showExtractedText)}
-                          className="w-full flex items-center justify-between text-lg font-bold text-slate-800 mb-4 p-3 bg-slate-50 rounded-xl hover:bg-slate-100 transition-all duration-200"
-                          aria-expanded={showExtractedText}
-                          aria-controls="extracted-text"
-                        >
-                          <span className="flex items-center">
-                            <span className="w-5 h-5 mr-2 text-slate-600">📄</span>
-                            Extracted Text
-                          </span>
-                          {showExtractedText ? <ChevronUp className="w-5 h-5" /> : <ChevronDown className="w-5 h-5" />}
-                        </button>
-                        {showExtractedText && (
-                          <div
-                            id="extracted-text"
-                            className="bg-slate-50 border border-slate-200 rounded-xl p-4 max-h-48 overflow-y-auto custom-scrollbar"
-                          >
-                            <p className="text-sm text-slate-700 leading-relaxed whitespace-pre-wrap">
-                              {result.extractedText}
-                            </p>
-                          </div>
-                        )}
-                      </div>
-                    )}
-                  </div>
-                </div>
-              </div>
-            </div>
+            <ScanResults
+              result={result}
+              isSaving={isSaving}
+              saveMessage={saveMessage}
+              handleSaveScan={handleSaveScan}
+              user={user}
+              resultRef={resultRef}
+              showExtractedText={showExtractedText}
+              setShowExtractedText={setShowExtractedText}
+              showAlternatives={showAlternatives}
+              setShowAlternatives={setShowAlternatives}
+              
+            />
           )}
         </div>
       </div>
 
-      {/* Custom styles */}
       <style jsx>{`
         .custom-scrollbar::-webkit-scrollbar {
           width: 6px;

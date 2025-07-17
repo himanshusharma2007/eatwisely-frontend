@@ -10,6 +10,7 @@ import {
   Scan,
   Target,
 } from "lucide-react";
+import { Link } from "react-router-dom";
 
 const Steps = () => {
   const sectionRef = useRef(null);
@@ -280,10 +281,10 @@ const Steps = () => {
               with EatWisly.
             </p>
             <div className="flex flex-col sm:flex-row gap-4 justify-center">
-              <button className="bg-white text-[#02C39A] px-8 py-4 rounded-lg font-semibold hover:bg-gray-50 transition-colors duration-200 flex items-center justify-center gap-3">
+              <Link to="/scan" className="bg-white text-[#02C39A] px-8 py-4 rounded-lg font-semibold hover:bg-gray-50 transition-colors duration-200 flex items-center justify-center gap-3">
                 <Camera className="w-5 h-5" />
                 Start Analyzing
-              </button>
+              </Link>
               <button className="bg-white/10 backdrop-blur-sm text-white px-8 py-4 rounded-lg font-semibold hover:bg-white/20 transition-colors duration-200 border border-white/20 flex items-center justify-center gap-3">
                 <Play className="w-5 h-5" />
                 Watch Demo

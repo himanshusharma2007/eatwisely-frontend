@@ -190,9 +190,9 @@ const ScanHistory = () => {
                   e.stopPropagation();
                   handleDelete(scan._id);
                 }}
-                className="bg-red-500 hover:bg-red-600 text-white rounded-full p-2 shadow-lg transform hover:scale-110 transition-all duration-200"
+                className="text-red-500 hover:bg-red-200  rounded-full p-2  transform hover:scale-110 transition-all duration-200 cursor-pointer"
               >
-                <Trash2 className="w-4 h-4" />
+                <Trash2 className="w-6 h-6" />
               </button>
             </div>
           ))}

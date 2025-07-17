@@ -1,38 +1,52 @@
-import React, { useState, useEffect, useRef } from 'react';
-import { useParams } from 'react-router-dom';
-import { Loader, Heart, AlertCircle, CheckCircle, Info, ChevronDown, ChevronUp, Apple } from 'lucide-react';
-import { getScanById } from '../services/api';
+import React, { useState, useEffect, useRef } from "react";
+import { useParams } from "react-router-dom";
+import {
+  Loader,
+  Heart,
+  AlertCircle,
+  CheckCircle,
+  Info,
+  ChevronDown,
+  ChevronUp,
+  Apple,
+} from "lucide-react";
+import { getScanById } from "../services/api";
+import { useSelector } from "react-redux";
+import { selectUserProfile } from "../redux/slices/userSlice";
 
 const ScanDetailsPage = () => {
   const { scanId } = useParams();
   const [scan, setScan] = useState(null);
   const [isLoading, setIsLoading] = useState(false);
-  const [error, setError] = useState('');
+  const [error, setError] = useState("");
   const [showExtractedText, setShowExtractedText] = useState(false);
   const [showAlternatives, setShowAlternatives] = useState(false);
   const headingRef = useRef(null);
   const contentRef = useRef(null);
+  const user = useSelector(selectUserProfile);
 
   // Animation on mount
   useEffect(() => {
     const animateElements = () => {
       if (headingRef.current) {
-        headingRef.current.style.opacity = '0';
-        headingRef.current.style.transform = 'translateY(30px)';
+        headingRef.current.style.opacity = "0";
+        headingRef.current.style.transform = "translateY(30px)";
         setTimeout(() => {
-          headingRef.current.style.transition = 'all 0.8s cubic-bezier(0.4, 0, 0.2, 1)';
-          headingRef.current.style.opacity = '1';
-          headingRef.current.style.transform = 'translateY(0)';
+          headingRef.current.style.transition =
+            "all 0.8s cubic-bezier(0.4, 0, 0.2, 1)";
+          headingRef.current.style.opacity = "1";
+          headingRef.current.style.transform = "translateY(0)";
         }, 100);
       }
 
       if (contentRef.current) {
-        contentRef.current.style.opacity = '0';
-        contentRef.current.style.transform = 'translateY(20px)';
+        contentRef.current.style.opacity = "0";
+        contentRef.current.style.transform = "translateY(20px)";
         setTimeout(() => {
-          contentRef.current.style.transition = 'all 0.6s cubic-bezier(0.4, 0, 0.2, 1)';
-          contentRef.current.style.opacity = '1';
-          contentRef.current.style.transform = 'translateY(0)';
+          contentRef.current.style.transition =
+            "all 0.6s cubic-bezier(0.4, 0, 0.2, 1)";
+          contentRef.current.style.opacity = "1";
+          contentRef.current.style.transform = "translateY(0)";
         }, 300);
       }
     };
@@ -48,7 +62,10 @@ const ScanDetailsPage = () => {
         const scanData = await getScanById(scanId);
         setScan(scanData);
       } catch (err) {
-        setError(err.response?.data?.message || 'Failed to load scan details. Please try again.');
+        setError(
+          err.response?.data?.message ||
+            "Failed to load scan details. Please try again."
+        );
       } finally {
         setIsLoading(false);
       }
@@ -58,44 +75,47 @@ const ScanDetailsPage = () => {
 
   // Helper function to get health score color and label
   const getHealthScoreInfo = (score) => {
-    if (score >= 80) return { 
-      color: 'bg-gradient-to-r from-green-400 to-emerald-500', 
-      label: 'Excellent', 
-      textColor: 'text-green-600',
-      bgColor: 'bg-gradient-to-br from-green-50 to-emerald-50',
-      borderColor: 'border-green-200'
-    };
-    if (score >= 60) return { 
-      color: 'bg-gradient-to-r from-yellow-400 to-amber-500', 
-      label: 'Good', 
-      textColor: 'text-yellow-600',
-      bgColor: 'bg-gradient-to-br from-yellow-50 to-amber-50',
-      borderColor: 'border-yellow-200'
-    };
-    if (score >= 40) return { 
-      color: 'bg-gradient-to-r from-orange-400 to-red-400', 
-      label: 'Fair', 
-      textColor: 'text-orange-600',
-      bgColor: 'bg-gradient-to-br from-orange-50 to-red-50',
-      borderColor: 'border-orange-200'
-    };
-    return { 
-      color: 'bg-gradient-to-r from-red-400 to-red-600', 
-      label: 'Poor', 
-      textColor: 'text-red-600',
-      bgColor: 'bg-gradient-to-br from-red-50 to-red-100',
-      borderColor: 'border-red-200'
+    if (score >= 80)
+      return {
+        color: "bg-gradient-to-r from-green-400 to-emerald-500",
+        label: "Excellent",
+        textColor: "text-green-600",
+        bgColor: "bg-gradient-to-br from-green-50 to-emerald-50",
+        borderColor: "border-green-200",
+      };
+    if (score >= 60)
+      return {
+        color: "bg-gradient-to-r from-yellow-400 to-amber-500",
+        label: "Good",
+        textColor: "text-yellow-600",
+        bgColor: "bg-gradient-to-br from-yellow-50 to-amber-50",
+        borderColor: "border-yellow-200",
+      };
+    if (score >= 40)
+      return {
+        color: "bg-gradient-to-r from-orange-400 to-red-400",
+        label: "Fair",
+        textColor: "text-orange-600",
+        bgColor: "bg-gradient-to-br from-orange-50 to-red-50",
+        borderColor: "border-orange-200",
+      };
+    return {
+      color: "bg-gradient-to-r from-red-400 to-red-600",
+      label: "Poor",
+      textColor: "text-red-600",
+      bgColor: "bg-gradient-to-br from-red-50 to-red-100",
+      borderColor: "border-red-200",
     };
   };
 
   // Helper function to get recommendation icon
   const getRecommendationIcon = (type) => {
     switch (type) {
-      case 'warning':
+      case "warning":
         return <AlertCircle className="w-5 h-5 mr-2 text-red-600" />;
-      case 'positive':
+      case "positive":
         return <CheckCircle className="w-5 h-5 mr-2 text-green-600" />;
-      case 'info':
+      case "info":
         return <Info className="w-5 h-5 mr-2 text-blue-600" />;
       default:
         return <Info className="w-5 h-5 mr-2 text-blue-600" />;
@@ -118,7 +138,9 @@ const ScanDetailsPage = () => {
           <div className="bg-red-50 border-l-4 border-red-400 p-4 rounded-lg animate-shake">
             <div className="flex items-center">
               <AlertCircle className="w-5 h-5 text-red-600 mr-3 flex-shrink-0" />
-              <span className="text-red-700 text-sm font-medium">{error || 'Scan not found.'}</span>
+              <span className="text-red-700 text-sm font-medium">
+                {error || "Scan not found."}
+              </span>
             </div>
           </div>
         </div>
@@ -130,7 +152,10 @@ const ScanDetailsPage = () => {
     <section className="relative min-h-[calc(100vh-94px)] py-4 sm:py-8 lg:py-16 px-4 sm:px-0">
       <div className="absolute inset-0 bg-gradient-to-br from-emerald-50 via-teal-50 to-cyan-50 opacity-60"></div>
       <div className="relative z-10 w-full max-w-4xl mx-auto">
-        <div ref={headingRef} className="bg-gradient-to-r from-emerald-500 to-teal-500 p-6 sm:p-8 text-center rounded-2xl sm:rounded-3xl shadow-xl border border-white/60 mb-8">
+        <div
+          ref={headingRef}
+          className="bg-gradient-to-r from-emerald-500 to-teal-500 p-6 sm:p-8 text-center rounded-2xl sm:rounded-3xl shadow-xl border border-white/60 mb-8"
+        >
           <h2 className="text-2xl sm:text-3xl font-bold text-white mb-2">
             Scan Details
           </h2>
@@ -139,7 +164,10 @@ const ScanDetailsPage = () => {
           </p>
         </div>
 
-        <div ref={contentRef} className="bg-white/95 backdrop-blur-xl rounded-2xl sm:rounded-3xl shadow-xl border border-white/60 overflow-hidden">
+        <div
+          ref={contentRef}
+          className="bg-white/95 backdrop-blur-xl rounded-2xl sm:rounded-3xl shadow-xl border border-white/60 overflow-hidden"
+        >
           <div className="p-6 sm:p-8 overflow-y-auto max-h-[calc(100vh-200px)] sm:max-h-full custom-scrollbar">
             <div className="space-y-8">
               {/* Image */}
@@ -160,13 +188,21 @@ const ScanDetailsPage = () => {
                     <Info className="w-5 h-5 mr-2 text-blue-600" />
                     Health Impact
                   </h4>
-                  <p className="text-sm text-slate-700 leading-relaxed">{scan.analysis.healthImpact}</p>
+                  <p className="text-sm text-slate-700 leading-relaxed">
+                    {scan.analysis.healthImpact}
+                  </p>
                 </div>
               )}
 
               {/* Health Score */}
               {scan.analysis?.healthScore && (
-                <div className={`${getHealthScoreInfo(scan.analysis.healthScore).bgColor} ${getHealthScoreInfo(scan.analysis.healthScore).borderColor} border-2 rounded-2xl p-6 text-center relative overflow-hidden`}>
+                <div
+                  className={`${
+                    getHealthScoreInfo(scan.analysis.healthScore).bgColor
+                  } ${
+                    getHealthScoreInfo(scan.analysis.healthScore).borderColor
+                  } border-2 rounded-2xl p-6 text-center relative overflow-hidden`}
+                >
                   <div className="absolute inset-0 bg-gradient-to-br from-white/20 to-transparent"></div>
                   <div className="relative z-10">
                     <h4 className="text-xl font-bold text-slate-800 mb-4 flex items-center justify-center">
@@ -178,7 +214,12 @@ const ScanDetailsPage = () => {
                         {scan.analysis.healthScore}
                         <span className="text-2xl text-slate-500">/100</span>
                       </div>
-                      <div className={`inline-block px-4 py-2 rounded-full font-semibold ${getHealthScoreInfo(scan.analysis.healthScore).textColor} bg-white/80`}>
+                      <div
+                        className={`inline-block px-4 py-2 rounded-full font-semibold ${
+                          getHealthScoreInfo(scan.analysis.healthScore)
+                            .textColor
+                        } bg-white/80`}
+                      >
                         {getHealthScoreInfo(scan.analysis.healthScore).label}
                       </div>
                     </div>
@@ -191,7 +232,9 @@ const ScanDetailsPage = () => {
                       </div>
                       <div className="w-full bg-white/60 rounded-full h-4 shadow-inner">
                         <div
-                          className={`${getHealthScoreInfo(scan.analysis.healthScore).color} h-4 rounded-full transition-all duration-2000 ease-out shadow-lg`}
+                          className={`${
+                            getHealthScoreInfo(scan.analysis.healthScore).color
+                          } h-4 rounded-full transition-all duration-2000 ease-out shadow-lg`}
                           style={{ width: `${scan.analysis.healthScore}%` }}
                         ></div>
                       </div>
@@ -211,18 +254,20 @@ const ScanDetailsPage = () => {
                     <div className="flex items-center text-xl">
                       <span
                         className={`inline-block px-4 py-2 rounded-full font-semibold ${
-                          scan.analysis.shouldEat === 'Yes'
-                            ? ' text-green-800'
-                            : scan.analysis.shouldEat === 'No'
-                            ? ' text-red-800'
-                            : ' text-yellow-800'
+                          scan.analysis.shouldEat === "Yes"
+                            ? " text-green-800"
+                            : scan.analysis.shouldEat === "No"
+                            ? " text-red-800"
+                            : " text-yellow-800"
                         }`}
                       >
                         {scan.analysis.shouldEat}
                       </span>
                     </div>
                   </div>
-                  <p className="text-sm text-slate-700 leading-relaxed">{scan.analysis.shouldEatReason}</p>
+                  <p className="text-sm text-slate-700 leading-relaxed">
+                    {scan.analysis.shouldEatReason}
+                  </p>
                 </div>
               )}
 
@@ -238,11 +283,19 @@ const ScanDetailsPage = () => {
                       <div className="text-3xl font-bold text-blue-600 mb-2">
                         {scan.analysis.nutritionalInfo.totalSugar}g
                       </div>
-                      <div className="text-sm font-medium text-slate-600">Total Sugar</div>
+                      <div className="text-sm font-medium text-slate-600">
+                        Total Sugar
+                      </div>
                       <div className="w-full bg-blue-200 rounded-full h-2 mt-3">
                         <div
                           className="bg-blue-500 h-2 rounded-full"
-                          style={{ width: `${Math.min((scan.analysis.nutritionalInfo.totalSugar / 50) * 100, 100)}%` }}
+                          style={{
+                            width: `${Math.min(
+                              (scan.analysis.nutritionalInfo.totalSugar / 50) *
+                                100,
+                              100
+                            )}%`,
+                          }}
                         ></div>
                       </div>
                     </div>
@@ -250,11 +303,20 @@ const ScanDetailsPage = () => {
                       <div className="text-3xl font-bold text-orange-600 mb-2">
                         {scan.analysis.nutritionalInfo.totalSodium}mg
                       </div>
-                      <div className="text-sm font-medium text-slate-600">Total Sodium</div>
+                      <div className="text-sm font-medium text-slate-600">
+                        Total Sodium
+                      </div>
                       <div className="w-full bg-orange-200 rounded-full h-2 mt-3">
                         <div
                           className="bg-orange-500 h-2 rounded-full"
-                          style={{ width: `${Math.min((scan.analysis.nutritionalInfo.totalSodium / 2300) * 100, 100)}%` }}
+                          style={{
+                            width: `${Math.min(
+                              (scan.analysis.nutritionalInfo.totalSodium /
+                                2300) *
+                                100,
+                              100
+                            )}%`,
+                          }}
                         ></div>
                       </div>
                     </div>
@@ -263,7 +325,9 @@ const ScanDetailsPage = () => {
                         <div className="text-3xl font-bold text-green-600 mb-2">
                           {scan.analysis.nutritionalInfo.caloriesPerServing}
                         </div>
-                        <div className="text-sm font-medium text-slate-600">Calories/Serving</div>
+                        <div className="text-sm font-medium text-slate-600">
+                          Calories/Serving
+                        </div>
                       </div>
                     )}
                     {scan.analysis.nutritionalInfo.servingSize && (
@@ -271,7 +335,9 @@ const ScanDetailsPage = () => {
                         <div className="text-lg font-bold text-purple-600 mb-2">
                           {scan.analysis.nutritionalInfo.servingSize}
                         </div>
-                        <div className="text-sm font-medium text-slate-600">Serving Size</div>
+                        <div className="text-sm font-medium text-slate-600">
+                          Serving Size
+                        </div>
                       </div>
                     )}
                   </div>
@@ -286,34 +352,44 @@ const ScanDetailsPage = () => {
                     Ingredients of Concern
                   </h4>
                   <div className="space-y-4">
-                    {scan.analysis.harmfulIngredients.map((ingredient, index) => (
-                      <div
-                        key={index}
-                        className="bg-gradient-to-r from-red-50 to-orange-50 border-l-4 border-red-400 rounded-lg p-4 hover:shadow-md transition-all duration-300"
-                      >
-                        <div className="flex flex-col sm:flex-row sm:items-start sm:justify-between mb-3">
-                          <h5 className="font-bold text-red-700 text-base">{ingredient.name || 'Unnamed Ingredient'}</h5>
-                          <span
-                            className={`inline-block px-3 py-1 rounded-full text-xs font-semibold mt-2 sm:mt-0 ${
-                              ingredient.severity === 'High'
-                                ? 'bg-red-200 text-red-800'
-                                : ingredient.severity === 'Medium'
-                                ? 'bg-yellow-200 text-yellow-800'
-                                : 'bg-orange-200 text-orange-800'
-                            }`}
-                          >
-                            {ingredient.severity} Risk
-                          </span>
-                        </div>
-                        <p className="text-sm text-slate-700 mb-3 leading-relaxed">{ingredient.warning}</p>
-                        {ingredient.alternative && (
-                          <div className="bg-green-100 border border-green-200 rounded-lg p-3">
-                            <span className="font-semibold text-green-700 text-sm">💡 Better Alternative: </span>
-                            <span className="text-green-600 text-sm">{ingredient.alternative}</span>
+                    {scan.analysis.harmfulIngredients.map(
+                      (ingredient, index) => (
+                        <div
+                          key={index}
+                          className="bg-gradient-to-r from-red-50 to-orange-50 border-l-4 border-red-400 rounded-lg p-4 hover:shadow-md transition-all duration-300"
+                        >
+                          <div className="flex flex-col sm:flex-row sm:items-start sm:justify-between mb-3">
+                            <h5 className="font-bold text-red-700 text-base">
+                              {ingredient.name || "Unnamed Ingredient"}
+                            </h5>
+                            <span
+                              className={`inline-block px-3 py-1 rounded-full text-xs font-semibold mt-2 sm:mt-0 ${
+                                ingredient.severity === "High"
+                                  ? "bg-red-200 text-red-800"
+                                  : ingredient.severity === "Medium"
+                                  ? "bg-yellow-200 text-yellow-800"
+                                  : "bg-orange-200 text-orange-800"
+                              }`}
+                            >
+                              {ingredient.severity} Risk
+                            </span>
                           </div>
-                        )}
-                      </div>
-                    ))}
+                          <p className="text-sm text-slate-700 mb-3 leading-relaxed">
+                            {ingredient.warning}
+                          </p>
+                          {ingredient.alternative && (
+                            <div className="bg-green-100 border border-green-200 rounded-lg p-3">
+                              <span className="font-semibold text-green-700 text-sm">
+                                💡 Better Alternative:{" "}
+                              </span>
+                              <span className="text-green-600 text-sm">
+                                {ingredient.alternative}
+                              </span>
+                            </div>
+                          )}
+                        </div>
+                      )
+                    )}
                   </div>
                 </div>
               )}
@@ -331,10 +407,17 @@ const ScanDetailsPage = () => {
                       <Apple className="w-5 h-5 mr-2 text-green-600" />
                       Healthy Alternatives
                     </span>
-                    {showAlternatives ? <ChevronUp className="w-5 h-5" /> : <ChevronDown className="w-5 h-5" />}
+                    {showAlternatives ? (
+                      <ChevronUp className="w-5 h-5" />
+                    ) : (
+                      <ChevronDown className="w-5 h-5" />
+                    )}
                   </button>
                   {showAlternatives && (
-                    <div id="healthy-alternatives" className="bg-green-50 border border-green-200 rounded-xl p-4">
+                    <div
+                      id="healthy-alternatives"
+                      className="bg-green-50 border border-green-200 rounded-xl p-4"
+                    >
                       <ul className="list-disc list-inside text-sm text-slate-700 space-y-2">
                         {scan.analysis.healthyAlternatives.map((alt, index) => (
                           <li key={index}>{alt}</li>
@@ -362,7 +445,9 @@ const ScanDetailsPage = () => {
                           {getRecommendationIcon(rec.type)}
                           {rec.title}
                         </h5>
-                        <p className="text-sm text-slate-700 leading-relaxed">{rec.message}</p>
+                        <p className="text-sm text-slate-700 leading-relaxed">
+                          {rec.message}
+                        </p>
                       </div>
                     ))}
                   </div>
@@ -370,18 +455,20 @@ const ScanDetailsPage = () => {
               )}
 
               {/* Additional Notes */}
-              {scan.analysis?.additionalNotes && (
+              {user && scan.analysis?.additionalNotes && (
                 <div className="bg-gradient-to-br from-pink-50 to-rose-100 border border-gray-200 rounded-xl p-6">
                   <h4 className="text-lg font-bold text-slate-800 mb-4 flex items-center">
-                    <Heart className="w-5 h-5 mr-2 text-gray-600" />
+                    <Heart className="w-5 h-5 mr-2 text-rose-600" />
                     Personal Advise
                   </h4>
-                  <p className="text-sm text-slate-700 leading-relaxed">{scan.analysis.additionalNotes}</p>
+                  <p className="text-sm text-slate-700 leading-relaxed">
+                    {scan.analysis.additionalNotes}
+                  </p>
                 </div>
               )}
 
               {/* Extracted Text - Collapsible */}
-              {scan.extractedText && (
+              {/* {scan.extractedText && (
                 <div>
                   <button
                     onClick={() => setShowExtractedText(!showExtractedText)}
@@ -403,7 +490,7 @@ const ScanDetailsPage = () => {
                     </div>
                   )}
                 </div>
-              )}
+              )} */}
             </div>
           </div>
         </div>
@@ -425,9 +512,16 @@ const ScanDetailsPage = () => {
           background: #94a3b8;
         }
         @keyframes shake {
-          0%, 100% { transform: translateX(0); }
-          25% { transform: translateX(-5px); }
-          75% { transform: translateX(5px); }
+          0%,
+          100% {
+            transform: translateX(0);
+          }
+          25% {
+            transform: translateX(-5px);
+          }
+          75% {
+            transform: translateX(5px);
+          }
         }
         .animate-shake {
           animation: shake 0.5s ease-in-out;

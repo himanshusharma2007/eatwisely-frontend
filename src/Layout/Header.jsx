@@ -13,7 +13,7 @@ const Header = () => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const location = useLocation();
-  const isOnScanRoute = location.pathname.includes("/scan");
+  const isOnScanRoute = location.pathname.includes("/scan") || location.pathname.includes("/profile");
   // Handle click outside to close dropdown when it was opened by click
   useEffect(() => {
     const handleClickOutside = (event) => {
@@ -36,7 +36,7 @@ const Header = () => {
   const handleLogout = async () => {
     try {
       await dispatch(logoutUser()).unwrap();
-      navigate("/login");
+      navigate("/");
       setIsDropdownOpen(false);
       setIsDropdownClicked(false);
     } catch (error) {
