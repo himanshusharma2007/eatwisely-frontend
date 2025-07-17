@@ -547,7 +547,7 @@ const ProfilePage = () => {
             </div>
 
             {/* Password */}
-            <div>
+            {/* <div>
               <label className="block text-sm font-semibold text-slate-700 mb-2">
                 New Password (leave blank to keep current)
               </label>
@@ -559,7 +559,7 @@ const ProfilePage = () => {
                 className="w-full bg-white px-4 py-4 text-zinc-700 border-2 border-slate-200 hover:border-emerald-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:border-transparent transition-all duration-300"
                 placeholder="Enter new password"
               />
-            </div>
+            </div> */}
 
             {/* Diseases */}
             <div>

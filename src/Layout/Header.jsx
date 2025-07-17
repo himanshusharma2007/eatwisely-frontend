@@ -75,7 +75,7 @@ const Header = () => {
   };
 
   return (
-    <div className="h-24 flex items-center relative">
+    <div className="h-24 flex items-center relative bg-[#F6FFFA]">
       <div className="max-w-6xl mx-auto w-full flex items-center justify-between px-4 sm:px-0 ">
         {/* Logo */}
         <div className="flex-shrink-0">

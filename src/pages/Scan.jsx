@@ -668,10 +668,10 @@ const ScanPage = () => {
 
                     {/* Additional Notes */}
                     {result.analysis?.additionalNotes && (
-                      <div className="bg-gradient-to-br from-gray-50 to-slate-50 border border-gray-200 rounded-xl p-6">
+                      <div className="bg-gradient-to-br from-pink-200 to-rose-100 border border-gray-200 rounded-xl p-6">
                         <h4 className="text-lg font-bold text-slate-800 mb-4 flex items-center">
                           <Info className="w-5 h-5 mr-2 text-gray-600" />
-                          Additional Notes
+                          Personal Advise
                         </h4>
                         <p className="text-sm text-slate-700 leading-relaxed">{result.analysis.additionalNotes}</p>
                       </div>

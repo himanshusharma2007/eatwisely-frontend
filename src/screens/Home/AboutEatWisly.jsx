@@ -1,15 +1,9 @@
 import { useEffect, useRef, useState } from "react";
 import {
   Heart,
-  Shield,
   Users,
-  Target,
-  Lightbulb,
-  Award,
   Scan,
-  Brain,
   Clock,
-  CheckCircle,
   AlertTriangle,
   Camera,
   Zap,
@@ -17,10 +11,9 @@ import {
   AlertCircle,
   BarChart3,
   Search,
-  X,
-  Smartphone 
-} from "lucide-react";
-
+  X} from "lucide-react";
+import { MdMoneyOff } from "react-icons/md";
+import { PiTarget } from "react-icons/pi";
 const AboutEatWisly = () => {
   const sectionRef = useRef(null);
   const statsRef = useRef(null);
@@ -78,9 +71,9 @@ const AboutEatWisly = () => {
   }, [isVisible]);
 
   const stats = [
-    { number: "50K+", label: "Labels Analyzed", icon: Scan },
-    { number: "25K+", label: "Happy Users", icon: Users },
-    { number: "98%", label: "Accuracy Rate", icon: Target },
+    { number: "100%", label: "Free To Use", icon: MdMoneyOff },
+    { number: "200+", label: "Labels Scanned", icon:Scan  },
+    { number: "95%", label: "Accuracy Rate", icon: PiTarget },
     { number: "24/7", label: "Available", icon: Clock },
   ];
 

@@ -212,10 +212,10 @@ const ScanDetailsPage = () => {
                       <span
                         className={`inline-block px-4 py-2 rounded-full font-semibold ${
                           scan.analysis.shouldEat === 'Yes'
-                            ? 'bg-green-200 text-green-800'
+                            ? ' text-green-800'
                             : scan.analysis.shouldEat === 'No'
-                            ? 'bg-red-200 text-red-800'
-                            : 'bg-yellow-200 text-yellow-800'
+                            ? ' text-red-800'
+                            : ' text-yellow-800'
                         }`}
                       >
                         {scan.analysis.shouldEat}
@@ -371,10 +371,10 @@ const ScanDetailsPage = () => {
 
               {/* Additional Notes */}
               {scan.analysis?.additionalNotes && (
-                <div className="bg-gradient-to-br from-gray-50 to-slate-50 border border-gray-200 rounded-xl p-6">
+                <div className="bg-gradient-to-br from-pink-50 to-rose-100 border border-gray-200 rounded-xl p-6">
                   <h4 className="text-lg font-bold text-slate-800 mb-4 flex items-center">
-                    <Info className="w-5 h-5 mr-2 text-gray-600" />
-                    Additional Notes
+                    <Heart className="w-5 h-5 mr-2 text-gray-600" />
+                    Personal Advise
                   </h4>
                   <p className="text-sm text-slate-700 leading-relaxed">{scan.analysis.additionalNotes}</p>
                 </div>
