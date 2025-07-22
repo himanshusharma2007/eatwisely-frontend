@@ -1,7 +1,16 @@
 import React, { useState, useRef, useEffect } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import { Link, useNavigate, useLocation } from "react-router-dom";
-import { Menu, User, LogOut, LogIn, UserPlus, X, History, Camera } from "lucide-react";
+import {
+  Menu,
+  User,
+  LogOut,
+  LogIn,
+  UserPlus,
+  X,
+  History,
+  Camera,
+} from "lucide-react";
 import { selectUserProfile, logoutUser } from "../redux/slices/userSlice";
 
 const Header = () => {
@@ -13,7 +22,10 @@ const Header = () => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const location = useLocation();
-  const isOnScanRoute = location.pathname.includes("/scan") || location.pathname.includes("/profile");
+  const isOnScanRoute =
+    location.pathname.includes("/scan") ||
+    location.pathname.includes("/profile");
+
   // Handle click outside to close dropdown when it was opened by click
   useEffect(() => {
     const handleClickOutside = (event) => {
@@ -92,25 +104,22 @@ const Header = () => {
             <>
               {isOnScanRoute && (
                 <>
-                <Link
-                  to="/scan"
-                  className="flex items-center gap-3 p-3 rounded-lg text-slate-800 hover:text-gray-700  transition-colors duration-150"
-                  onClick={() => setIsMenuOpen(false)}
-                >
-                  <Camera className="w-5 h-5 " />
-                  <span className="font-medium  ">
-                    Scan 
-                  </span>
-                </Link><Link
-                  to="/scan-history"
-                  className="flex items-center gap-3 p-3 rounded-lg text-slate-800 hover:text-gray-700  transition-colors duration-150"
-                  onClick={() => setIsMenuOpen(false)}
-                >
-                  <History className="w-5 h-5 " />
-                  <span className="font-medium  ">
-                    Scan History
-                  </span>
-                </Link>
+                  <Link
+                    to="/scan"
+                    className="flex items-center gap-3 p-3 rounded-lg text-slate-800 hover:text-gray-700  transition-colors duration-150"
+                    onClick={() => setIsMenuOpen(false)}
+                  >
+                    <Camera className="w-5 h-5 " />
+                    <span className="font-medium  ">Scan</span>
+                  </Link>
+                  <Link
+                    to="/scan-history"
+                    className="flex items-center gap-3 p-3 rounded-lg text-slate-800 hover:text-gray-700  transition-colors duration-150"
+                    onClick={() => setIsMenuOpen(false)}
+                  >
+                    <History className="w-5 h-5 " />
+                    <span className="font-medium  ">Scan History</span>
+                  </Link>
                 </>
               )}
 
@@ -166,7 +175,7 @@ const Header = () => {
             <div className="flex items-center gap-4">
               <Link
                 to="/login"
-                className="flex items-center gap-2 px-4 py-2 bg-zinc-900 hover:bg-gray-700 rounded-lg transition-colors duration-150"
+                className="flex items-center gap-2 px-4 py-2 bg-zinc-900 text-white hover:bg-gray-700 rounded-lg transition-colors duration-150"
               >
                 <LogIn className="w-5 h-5" /> Login
               </Link>
@@ -214,7 +223,13 @@ const Header = () => {
             <div className="flex flex-col h-full">
               {/* Header */}
               <div className="flex items-center justify-between p-4 border-b border-gray-200">
-                <h2 className="text-lg font-semibold text-slate-800">Menu</h2>
+                <div className="flex-shrink-0">
+                  <Link to="/" className="block">
+                    <h1 className="text-2xl  font-semibold font-pacifico  bg-gradient-to-r leading-[2] from-emerald-600 via-teal-600 to-cyan-600 bg-clip-text text-transparent">
+                      EatWisely
+                    </h1>
+                  </Link>
+                </div>
                 <button
                   onClick={() => setIsMenuOpen(false)}
                   className="p-2 rounded-lg hover:bg-gray-100 transition-colors duration-150"
@@ -242,6 +257,28 @@ const Header = () => {
 
                     {/* Menu Links */}
                     <div className="space-y-2">
+                      {/* Show Scan link if user is logged in and on scan route */}
+                      <Link
+                        to="/scan"
+                        className="flex items-center gap-3 p-3 rounded-lg hover:bg-gray-50 transition-colors duration-150"
+                        onClick={() => setIsMenuOpen(false)}
+                      >
+                        <Camera className="w-5 h-5 text-slate-600" />
+                        <span className="font-medium text-slate-800">Scan</span>
+                      </Link>
+
+                      {/* Show Scan History link if user is logged in and on scan route */}
+                      <Link
+                        to="/scan-history"
+                        className="flex items-center gap-3 p-3 rounded-lg hover:bg-gray-50 transition-colors duration-150"
+                        onClick={() => setIsMenuOpen(false)}
+                      >
+                        <History className="w-5 h-5 text-slate-600" />
+                        <span className="font-medium text-slate-800">
+                          Scan History
+                        </span>
+                      </Link>
+
                       <Link
                         to="/profile"
                         className="flex items-center gap-3 p-3 rounded-lg hover:bg-gray-50 transition-colors duration-150"
@@ -252,21 +289,6 @@ const Header = () => {
                           Profile
                         </span>
                       </Link>
-
-                      {/* New Scan History Link - Only show if on /scan route */}
-                      {console.log("isOnScanRoute", isOnScanRoute)}
-                      {isOnScanRoute && (
-                        <Link
-                          to="/scan-history"
-                          className="flex items-center gap-3 p-3 rounded-lg hover:bg-gray-50 transition-colors duration-150"
-                          onClick={() => setIsMenuOpen(false)}
-                        >
-                          <History className="w-5 h-5 text-slate-600" />
-                          <span className="font-medium text-slate-800">
-                            Scan History
-                          </span>
-                        </Link>
-                      )}
 
                       <button
                         onClick={() => {

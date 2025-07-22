@@ -215,16 +215,7 @@ const LoginPage = () => {
               {errors.password && <p className="text-red-500 text-sm mt-1 animate-pulse">{errors.password}</p>}
             </div>
 
-            <div className="text-right">
-              <button
-                type="button"
-                onClick={handleForgotPassword}
-                className="text-sm text-emerald-600 hover:text-emerald-700 font-medium transition-colors duration-200"
-              >
-                Forgot Password?
-              </button>
-            </div>
-
+            
             {errors.submit && (
               <div className="bg-red-50 border border-red-200 rounded-xl p-4">
                 <p className="text-red-600 text-sm">{errors.submit}</p>

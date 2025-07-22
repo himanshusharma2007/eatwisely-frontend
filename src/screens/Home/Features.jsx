@@ -128,14 +128,14 @@ const Features = () => {
 
         {/* Call to Action */}
         <div className="text-center">
-          <div className="bg-gradient-to-r from-emerald-600 via-teal-600 to-cyan-600 rounded-3xl p-12 shadow-2xl">
+          <div className="bg-gradient-to-r from-emerald-600 via-teal-600 to-cyan-600 rounded-3xl p-8 md:p-12 shadow-2xl">
             <h3 className="text-3xl sm:text-4xl font-bold text-white mb-6">
               Ready to Eat Wisely?
             </h3>
             <p className="text-emerald-50 text-xl mb-8 max-w-2xl mx-auto">
               Join thousands of users who are already making smarter food choices with EatWisly's AI-powered analysis.
             </p>
-            <Link to="/scan" className="bg-white text-emerald-600 px-8 py-4 rounded-2xl font-bold text-lg hover:bg-emerald-50 transition-all duration-300 shadow-lg hover:shadow-xl transform hover:scale-105"
+            <Link to="/scan" className="bg-white text-emerald-600 px-8 py-4 rounded-2xl font-bold text-sm md:text-lg hover:bg-emerald-50 transition-all duration-300 shadow-lg hover:shadow-xl transform hover:scale-105"
             >
               Try EatWisly Now
             </Link>

@@ -109,7 +109,7 @@ const ImageUploadCard = ({
 
     return (
       <div className="w-full xl:w-[40%] xl:max-w-lg mx-auto xl:mx-0">
-        <div className="bg-white/90 backdrop-blur-xl rounded-2xl sm:rounded-3xl shadow-xl border border-white/60 overflow-hidden hover:shadow-2xl transition-all duration-500 hover:scale-[1.02]">
+        <div className="bg-white/90 backdrop-blur-xl rounded-2xl sm:rounded-3xl shadow-xl border border-white/60 overflow-hidden hover:shadow-2xl transition-all duration-500 ">
           <div className="bg-gradient-to-r from-emerald-500 to-teal-500 p-6 sm:p-8 text-center">
             <div ref={headingRef}>
               <h2 className="text-2xl sm:text-3xl font-bold text-white mb-2">

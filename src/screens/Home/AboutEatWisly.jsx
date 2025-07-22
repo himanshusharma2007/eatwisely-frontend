@@ -131,13 +131,13 @@ const AboutEatWisly = () => {
               </div>
 
               <div className="hero-animate space-y-6">
-                <p className="text-lg sm:text-xl text-slate-700 leading-relaxed">
+                <p className="text-lg  text-slate-700 leading-relaxed">
                   <strong>Most people can't!</strong> Food labels are filled
                   with confusing scientific terms, hidden harmful ingredients,
                   and unclear health information that put you and your family at
                   risk.
                 </p>
-                <p className="text-lg sm:text-xl text-slate-700 leading-relaxed">
+                <p className="text-lg  text-slate-700 leading-relaxed">
                   Don't worry! Our platform is designed to decode these labels,
                   providing you with simple, clear, and actionable health
                   insights to make safer food choices.
@@ -149,7 +149,7 @@ const AboutEatWisly = () => {
             <div className="flex flex-col sm:flex-row justify-between gap-12 mb-12 text-zinc-900 mx-auto">
               {/* Left Side - The Problem */}
               <div className="space-y-8 w-full sm:w-1/2">
-                <div className="bg-gradient-to-br from-red-500/20 to-orange-500/20 rounded-2xl p-8 border border-red-500/30">
+                <div className="bg-gradient-to-br from-red-500/20 to-orange-500/20 rounded-2xl p-6 md:p-8 border border-red-500/30">
                   <h2 className="text-3xl font-bold mb-6 flex items-center gap-3">
                     <AlertTriangle className="w-8 h-8 text-red-400" />
                     The Hidden Danger
@@ -196,7 +196,7 @@ const AboutEatWisly = () => {
               </div>
 
               <div className="space-y-8 w-full sm:w-1/2">
-                <div className="bg-gradient-to-br from-emerald-500/20 to-teal-500/20 rounded-2xl p-8 border border-emerald-500/30 h-full">
+                <div className="bg-gradient-to-br from-emerald-500/20 to-teal-500/20 rounded-2xl p-6 md:p-8 border border-emerald-500/30 h-full">
                   <h2 className="text-3xl font-bold mb-6 flex items-center gap-3">
                     <Zap className="w-8 h-8 text-emerald-400" />
                     The EatWisly Solution

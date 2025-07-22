@@ -179,10 +179,16 @@ const Steps = () => {
                   </div>
 
                   {/* CTA */}
-                  <button className="inline-flex items-center gap-2 bg-[#02C39A] text-white px-6 py-3 rounded-lg font-medium hover:bg-[#00A896] transition-colors duration-200">
-                    Learn More
-                    <ArrowRight className="w-4 h-4" />
-                  </button>
+                  <a
+                    href="https://drive.google.com/file/d/13UAdn704txDeRhOrX0O81LO-ARSyqewP/view?usp=sharing"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                  >
+                    <button className="inline-flex items-center gap-2 bg-[#02C39A] text-white px-6 py-3 rounded-lg font-medium hover:bg-[#00A896] transition-colors duration-200">
+                      Learn More
+                      <ArrowRight className="w-4 h-4" />
+                    </button>
+                  </a>
                 </div>
 
                 {/* Visual */}
@@ -272,16 +278,19 @@ const Steps = () => {
 
         {/* Bottom CTA */}
         <div className="mt-24 text-center">
-          <div className="bg-gradient-to-r from-[#02C39A] to-[#00A896] rounded-2xl p-12">
-            <h3 className="text-4xl font-bold text-white mb-6">
+          <div className="bg-gradient-to-r from-emerald-600 via-teal-600 to-cyan-600 rounded-3xl p-8 md:p-12 shadow-2xl">
+            <h3 className="text-3xl md:text-4xl font-bold text-white mb-6">
               Ready to Transform Your Food Choices?
             </h3>
-            <p className="text-xl text-white/90 mb-8 max-w-2xl mx-auto">
+            <p className="text-lg md:text-xl text-white/90 mb-8 md:max-w-2xl mx-auto">
               Join thousands of health-conscious users making smarter decisions
               with EatWisly.
             </p>
             <div className="flex flex-col sm:flex-row gap-4 justify-center">
-              <Link to="/scan" className="bg-white text-[#02C39A] px-8 py-4 rounded-lg font-semibold hover:bg-gray-50 transition-colors duration-200 flex items-center justify-center gap-3">
+              <Link
+                to="/scan"
+                className="bg-white text-[#02C39A] px-8 py-4 rounded-lg font-semibold hover:bg-gray-50 transition-colors duration-200 flex items-center justify-center gap-3"
+              >
                 <Camera className="w-5 h-5" />
                 Start Analyzing
               </Link>
