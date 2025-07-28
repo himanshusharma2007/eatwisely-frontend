@@ -4,9 +4,10 @@ import React, { useState, useRef, useEffect } from "react";
 import { useSelector } from "react-redux";
 import { selectUserProfile } from "../redux/slices/userSlice";
 import { useNavigate } from "react-router-dom";
-import { uploadImageAuth, uploadImageGuest, saveScanResult } from "../services/api";
+import { uploadImageAuth, uploadImageGuest, getProgress, saveScanResult } from "../services/api";
 import ImageUploadCard from "../screens/Scan/ImageUploadCard";
 import ScanResults from "../screens/Scan/ScanResults";
+
 const ScanPage = () => {
   const [image, setImage] = useState(null);
   const [previewUrl, setPreviewUrl] = useState(null);
@@ -18,12 +19,19 @@ const ScanPage = () => {
   const [showExtractedText, setShowExtractedText] = useState(false);
   const [showAlternatives, setShowAlternatives] = useState(false);
   const [dragActive, setDragActive] = useState(false);
+  
+  // Progress tracking states
+  const [progress, setProgress] = useState(0);
+  const [progressStatus, setProgressStatus] = useState("");
+  const [taskId, setTaskId] = useState(null);
+  
   const user = useSelector(selectUserProfile);
   const navigate = useNavigate();
   const fileInputRef = useRef(null);
   const headingRef = useRef(null);
   const formRef = useRef(null);
   const resultRef = useRef(null);
+  const progressIntervalRef = useRef(null);
 
   useEffect(() => {
     const animateElements = () => {
@@ -53,8 +61,65 @@ const ScanPage = () => {
     animateElements();
     return () => {
       if (previewUrl) URL.revokeObjectURL(previewUrl);
+      if (progressIntervalRef.current) {
+        clearInterval(progressIntervalRef.current);
+      }
     };
   }, [previewUrl]);
+
+  // Progress polling function
+  const startProgressPolling = (taskId) => {
+    if (progressIntervalRef.current) {
+      clearInterval(progressIntervalRef.current);
+    }
+
+    progressIntervalRef.current = setInterval(async () => {
+      try {
+        const progressData = await getProgress(taskId);
+        
+        setProgress(progressData.progress);
+        setProgressStatus(progressData.status);
+        
+        if (progressData.completed) {
+          clearInterval(progressIntervalRef.current);
+          setIsLoading(false);
+          
+          if (progressData.error) {
+            setError(progressData.error);
+            setProgress(0);
+            setProgressStatus("");
+          } else if (progressData.result) {
+            setResult(progressData.result);
+            
+            // Animate result appearance
+            if (resultRef.current) {
+              resultRef.current.style.opacity = "0";
+              resultRef.current.style.transform = "translateX(30px) scale(0.95)";
+              setTimeout(() => {
+                resultRef.current.style.transition =
+                  "all 0.8s cubic-bezier(0.34, 1.56, 0.64, 1)";
+                resultRef.current.style.opacity = "1";
+                resultRef.current.style.transform = "translateX(0) scale(1)";
+              }, 150);
+            }
+          }
+          
+          // Reset progress states
+          setTaskId(null);
+          setProgress(0);
+          setProgressStatus("");
+        }
+      } catch (error) {
+        console.error("Progress polling error:", error);
+        clearInterval(progressIntervalRef.current);
+        setIsLoading(false);
+        setError("Failed to get progress. Please try again.");
+        setProgress(0);
+        setProgressStatus("");
+        setTaskId(null);
+      }
+    }, 500); // Poll every 2 seconds
+  };
 
   const handleSubmit = async () => {
     if (!image) {
@@ -66,29 +131,30 @@ const ScanPage = () => {
     setError("");
     setResult(null);
     setSaveMessage("");
+    setProgress(0);
+    setProgressStatus("Starting...");
 
     try {
       const uploadFunction = user ? uploadImageAuth : uploadImageGuest;
       const response = await uploadFunction(image);
-      setResult(response);
-
-      if (resultRef.current) {
-        resultRef.current.style.opacity = "0";
-        resultRef.current.style.transform = "translateX(30px) scale(0.95)";
-        setTimeout(() => {
-          resultRef.current.style.transition =
-            "all 0.8s cubic-bezier(0.34, 1.56, 0.64, 1)";
-          resultRef.current.style.opacity = "1";
-          resultRef.current.style.transform = "translateX(0) scale(1)";
-        }, 150);
+      
+      if (response.taskId) {
+        setTaskId(response.taskId);
+        setProgressStatus(response.message || "Processing...");
+        startProgressPolling(response.taskId);
+      } else {
+        // Fallback for immediate response (if API doesn't return taskId)
+        setResult(response);
+        setIsLoading(false);
       }
     } catch (error) {
+      setIsLoading(false);
+      setProgress(0);
+      setProgressStatus("");
       setError(
         error.response?.data?.message ||
           "Failed to process image. Please try again."
       );
-    } finally {
-      setIsLoading(false);
     }
   };
 
@@ -124,6 +190,15 @@ const ScanPage = () => {
     }
   };
 
+  // Cleanup on component unmount
+  useEffect(() => {
+    return () => {
+      if (progressIntervalRef.current) {
+        clearInterval(progressIntervalRef.current);
+      }
+    };
+  }, []);
+
   return (
     <section className="relative min-h-[calc(100vh-94px)] py-2 sm:py-8 lg:py-16 px-2 sm:px-0">
       <div className="absolute inset-0 bg-gradient-to-br from-emerald-50 via-teal-50 to-cyan-50 opacity-60"></div>
@@ -146,6 +221,8 @@ const ScanPage = () => {
             headingRef={headingRef}
             formRef={formRef}
             error={error}
+            progress={progress}
+            progressStatus={progressStatus}
           />
           {result && (
             <ScanResults
@@ -159,7 +236,6 @@ const ScanPage = () => {
               setShowExtractedText={setShowExtractedText}
               showAlternatives={showAlternatives}
               setShowAlternatives={setShowAlternatives}
-              
             />
           )}
         </div>

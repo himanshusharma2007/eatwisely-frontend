@@ -28,7 +28,7 @@ api.interceptors.response.use(
 
 // API Handlers
 
-// Authenticated Image Upload
+// Authenticated Image Upload - Now returns taskId
 export const uploadImageAuth = async (file) => {
   const formData = new FormData();
   formData.append("image", file);
@@ -39,8 +39,12 @@ export const uploadImageAuth = async (file) => {
   });
   return response.data;
 };
-export const saveScanResult = async (formData) => {
-  const response = await api.post("/scan/save/auth", formData, {
+
+// Guest Image Upload - Now returns taskId
+export const uploadImageGuest = async (file) => {
+  const formData = new FormData();
+  formData.append("image", file);
+  const response = await api.post("/scan/images/upload/guest", formData, {
     headers: {
       "Content-Type": "multipart/form-data",
     },
@@ -48,11 +52,15 @@ export const saveScanResult = async (formData) => {
   return response.data;
 };
 
-// Guest Image Upload
-export const uploadImageGuest = async (file) => {
-  const formData = new FormData();
-  formData.append("image", file);
-  const response = await api.post("/scan/images/upload/guest", formData, {
+// Get progress status
+export const getProgress = async (taskId) => {
+  const response = await api.get(`/scan/progress/${taskId}`);
+  return response.data;
+};
+
+// Save scan result
+export const saveScanResult = async (formData) => {
+  const response = await api.post("/scan/save/auth", formData, {
     headers: {
       "Content-Type": "multipart/form-data",
     },
@@ -140,6 +148,7 @@ export const signup = async (credentials) => {
     throw error;
   }
 };
+
 export const sendFeedback = async (credentials) => {
   try {
     const response = await api.post("/feedback", credentials);
