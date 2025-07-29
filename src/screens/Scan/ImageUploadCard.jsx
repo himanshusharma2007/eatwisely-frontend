@@ -162,7 +162,7 @@ const ImageUploadCard = ({
                   <div className="flex flex-col sm:flex-row gap-3">
                     <button
                       onClick={handleCaptureClick}
-                      className="flex-1 bg-gradient-to-r from-emerald-500 to-teal-500 text-white px-6 py-3 rounded-xl font-medium transition-all duration-300 hover:shadow-lg hover:scale-105 transform active:scale-95"
+                      className="flex-1 cursor-pointer bg-gradient-to-r from-emerald-500 to-teal-500 text-white px-6 py-3 rounded-xl font-medium transition-all duration-300 hover:shadow-lg hover:scale-105 transform active:scale-95"
                       aria-label="Take photo of food label"
                     >
                       <Camera className="w-5 h-5 mr-2 inline" />
@@ -170,7 +170,7 @@ const ImageUploadCard = ({
                     </button>
                     <button
                       onClick={handleUploadClick}
-                      className="flex-1 border-2 border-emerald-200 text-emerald-600 px-6 py-3 rounded-xl font-medium transition-all duration-300 hover:bg-emerald-50 hover:border-emerald-300 hover:scale-105 transform active:scale-95"
+                      className="flex-1 cursor-pointer border-2 border-emerald-200 text-emerald-600 px-6 py-3 rounded-xl font-medium transition-all duration-300 hover:bg-emerald-50 hover:border-emerald-300 hover:scale-105 transform active:scale-95"
                       aria-label="Browse files for food label image"
                     >
                       <Upload className="w-5 h-5 mr-2 inline" />
@@ -190,7 +190,7 @@ const ImageUploadCard = ({
 
                   <button
                     onClick={handleDemoImageClick}
-                    className="flex  mx-auto justify-between w-full items-center gap-4 border-2 border-emerald-200 text-emerald-600 px-6 py-3 rounded-xl font-medium transition-all duration-300 hover:bg-emerald-50 hover:border-emerald-300 hover:scale-105 transform active:scale-95"
+                    className="flex cursor-pointer  mx-auto justify-between w-full items-center gap-4 border-2 border-emerald-200 text-emerald-600 px-6 py-3 rounded-xl font-medium transition-all duration-300 hover:bg-emerald-50 hover:border-emerald-300 hover:scale-105 transform active:scale-95"
                     aria-label="Use demo food label image"
                   >
                     <ImageIcon className="w-5 h-5" />

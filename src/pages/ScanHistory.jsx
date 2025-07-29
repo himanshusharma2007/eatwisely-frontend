@@ -202,7 +202,7 @@ const ScanHistory = () => {
   );
 
   return (
-    <section className="relative min-h-[calc(100vh-94px)] py-4 sm:py-8 lg:py-16 px-4 sm:px-0 max-w-3xl mx-auto">
+    <section className="relative min-h-[calc(100vh-94px)] py-4 sm:py-8 lg:py-16 px-4 sm:px-4 max-w-3xl mx-auto ">
       <div className="absolute inset-0 bg-gradient-to-br from-emerald-50 via-teal-50 to-cyan-50 opacity-60"></div>
       <div className="relative z-10 w-full max-w-6xl mx-auto">
         <div
