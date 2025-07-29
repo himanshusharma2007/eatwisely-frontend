@@ -335,7 +335,7 @@ const ProfilePage = () => {
     }
   }
   return (
-    <section className="relative bg-gradient-to-br from-emerald-50 via-teal-50 to-cyan-50 py-16 px-4 sm:px-6 lg:px-8 min-h-screen flex items-center justify-center">
+    <section className="relative  py-16 px-4 sm:px-6 lg:px-8 min-h-screen flex items-center justify-center">
       <div className="relative z-10 w-full max-w-2xl">
         {/* Profile Card */}
         <div className="bg-white/80 backdrop-blur-xl rounded-3xl shadow-2xl p-8 border border-white/50 hover:shadow-3xl transition-all duration-500">
