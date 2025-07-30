@@ -100,7 +100,7 @@ const ScanPage = () => {
                   "all 0.8s cubic-bezier(0.34, 1.56, 0.64, 1)";
                 resultRef.current.style.opacity = "1";
                 resultRef.current.style.transform = "translateX(0) scale(1)";
-              }, 150);
+              }, 1000);
             }
           }
           

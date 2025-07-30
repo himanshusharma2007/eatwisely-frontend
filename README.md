@@ -1,12 +1,89 @@
-# React + Vite
+# EatWisely - Frontend
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+EatWisely is a health-conscious application that helps users scan food labels, analyze ingredients using AI, and keep track of scanned items with an intuitive and responsive UI.
 
-Currently, two official plugins are available:
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Babel](https://babeljs.io/) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+![Home Page](home.png)
+![Scan Page](scan.png)
 
-## Expanding the ESLint configuration
 
-If you are developing a production application, we recommend using TypeScript with type-aware lint rules enabled. Check out the [TS template](https://github.com/vitejs/vite/tree/main/packages/create-vite/template-react-ts) for information on how to integrate TypeScript and [`typescript-eslint`](https://typescript-eslint.io) in your project.
+## 🚀 Live Demo
+
+[https://eatwisely.vercel.app](https://eatwisely.vercel.app)
+
+## ✨ Features
+
+* User Authentication (Login / Signup)
+* OCR-based food label scanning
+* Ingredient analysis with Google Gemini AI
+* Scan history and detailed views
+* Responsive UI with animations
+* Toast notifications and error handling
+* Feedback submission
+
+## 🧑‍💻 Tech Stack
+
+* React 18
+* Vite
+* Tailwind CSS + DaisyUI
+* Redux Toolkit
+* Firebase (for storage)
+* Axios for API requests
+* React Router DOM
+* Framer Motion + GSAP
+* React GA4 (Analytics)
+
+## 📁 Project Structure
+
+```
+src/
+├── Layout/
+├── pages/
+│   ├── Home.jsx
+│   ├── Login.jsx
+│   ├── Signup.jsx
+│   ├── ProfilePage.jsx
+│   ├── Scan.jsx
+│   ├── ScanHistory.jsx
+│   └── ScanDetail.jsx
+├── redux/
+│   └── slices/
+├── App.jsx
+├── main.jsx
+```
+
+## 🧭 Routes
+
+| Path            | Component       | Protected |
+| --------------- | --------------- | --------- |
+| `/`             | HomePage        | No        |
+| `/login`        | Login           | No        |
+| `/signup`       | Signup          | No        |
+| `/profile`      | ProfilePage     | Yes       |
+| `/scan`         | ScanPage        | Yes       |
+| `/scan-history` | ScanHistory     | Yes       |
+| `/scan/:scanId` | ScanDetailsPage | Yes       |
+
+## 📦 Installation
+
+```bash
+git clone https://github.com/himanshusharma2007/eatwisely-frontend
+cd eatwisely-frontend
+npm install
+npm run dev
+```
+
+## 🖼 UI Screenshots
+
+Place your screenshots in the `public/screenshots/` or `src/assets/screenshots/` directory:
+
+* `home.png`
+* `scan.png`
+
+## 🤝 Contributions
+
+Feel free to fork and raise a pull request!
+
+## 📄 License
+
+MIT
