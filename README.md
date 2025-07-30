@@ -73,13 +73,6 @@ npm install
 npm run dev
 ```
 
-## 🖼 UI Screenshots
-
-Place your screenshots in the `public/screenshots/` or `src/assets/screenshots/` directory:
-
-* `home.png`
-* `scan.png`
-
 ## 🤝 Contributions
 
 Feel free to fork and raise a pull request!
